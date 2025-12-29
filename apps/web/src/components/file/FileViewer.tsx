@@ -94,7 +94,7 @@ export function FileViewer({ path, content, language, onClose }: FileViewerProps
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto bg-[#1e1e1e]">
           <Highlight theme={themes.vsDark} code={content} language={prismLanguage}>
             {({ className, style, tokens, getLineProps, getTokenProps }) => (
               <pre
@@ -103,7 +103,7 @@ export function FileViewer({ path, content, language, onClose }: FileViewerProps
                   ...style,
                   margin: 0,
                   padding: "1rem",
-                  background: "transparent",
+                  background: "#1e1e1e",
                   minHeight: "100%",
                 }}
               >
@@ -114,9 +114,9 @@ export function FileViewer({ path, content, language, onClose }: FileViewerProps
                       <div
                         key={i}
                         {...lineProps}
-                        className="table-row hover:bg-muted/30"
+                        className="table-row hover:bg-white/5"
                       >
-                        <span className="table-cell select-none pr-4 text-right text-muted-foreground/50 w-12">
+                        <span className="table-cell select-none pr-4 text-right text-gray-500 w-12">
                           {i + 1}
                         </span>
                         <span className="table-cell">

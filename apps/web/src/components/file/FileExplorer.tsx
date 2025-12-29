@@ -32,22 +32,22 @@ export function FileExplorer({ projectId, onFileSelect }: FileExplorerProps) {
   const { t } = useTranslation();
   const [tree, setTree] = useState<FileNode[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [hasError, setHasError] = useState(false);
 
   const loadFileTree = useCallback(async () => {
     try {
       setLoading(true);
-      setError(null);
+      setHasError(false);
       const res = await fetch(`${API_URL}/projects/${projectId}/files`);
       if (!res.ok) throw new Error("Failed to load files");
       const data = await res.json();
       setTree(data);
     } catch (e) {
-      setError(t("fileExplorer.error"));
+      setHasError(true);
     } finally {
       setLoading(false);
     }
-  }, [projectId, t]);
+  }, [projectId]);
 
   useEffect(() => {
     loadFileTree();
@@ -73,10 +73,10 @@ export function FileExplorer({ projectId, onFileSelect }: FileExplorerProps) {
     );
   }
 
-  if (error) {
+  if (hasError) {
     return (
       <div className="p-4">
-        <p className="text-sm text-destructive mb-2">{error}</p>
+        <p className="text-sm text-destructive mb-2">{t("fileExplorer.error")}</p>
         <Button variant="outline" size="sm" onClick={loadFileTree}>
           <RefreshCw className="h-3 w-3 mr-1" />
           {t("common.refresh")}
