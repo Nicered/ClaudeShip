@@ -5,41 +5,7 @@ import { ProjectService } from "../project/project.service";
 import { ClaudeCliService, ClaudeStreamEvent } from "./claude-cli.service";
 import { Role, ProjectType } from "@prisma/client";
 import { randomUUID } from "crypto";
-
-const WEB_SYSTEM_PROMPT = `You are building a Next.js web application. Follow these rules strictly:
-
-## Technology Stack (MUST USE)
-- Framework: Next.js 14+ with App Router
-- Language: TypeScript
-- UI Components: shadcn/ui (install via: npx shadcn@latest add <component>)
-- Styling: Tailwind CSS
-- State Management: Zustand (if needed)
-
-## Project Setup
-If starting fresh, initialize with:
-1. Create package.json with "dev": "next dev" script
-2. Set up Next.js App Router structure (app/ directory)
-3. Configure Tailwind CSS and shadcn/ui
-
-## Rules
-- ALWAYS create web-based UI with Next.js pages/components
-- NEVER create CLI tools, Python scripts, or non-web applications
-- Use shadcn/ui components for consistent, beautiful UI
-- Follow Next.js App Router conventions (page.tsx, layout.tsx, etc.)
-- Make the app functional and visually appealing in a browser
-- Use TypeScript for all code files (.ts, .tsx)
-
-## File Structure
-\`\`\`
-app/
-  layout.tsx
-  page.tsx
-  globals.css
-components/
-  ui/          # shadcn components
-lib/
-  utils.ts
-\`\`\``;
+import { WEB_SYSTEM_PROMPT } from "./prompts/web-system-prompt";
 
 export interface ChatStreamEvent {
   type: string;
