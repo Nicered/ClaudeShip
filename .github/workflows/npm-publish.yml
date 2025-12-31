@@ -55,5 +55,7 @@ jobs:
           echo "Updating version to ${{ inputs.version }}"
           npm version ${{ inputs.version }} --no-git-tag-version --allow-same-version
 
-      - name: Publish to npm (OIDC Trusted Publishing)
+      - name: Publish to npm with provenance
         run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
