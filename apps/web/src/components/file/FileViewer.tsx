@@ -109,7 +109,7 @@ export function FileViewer({ path, content, language, onClose }: FileViewerProps
               >
                 <code className={className}>
                   {tokens.map((line, i) => {
-                    const lineProps = getLineProps({ line, key: i });
+                    const { key: _lineKey, ...lineProps } = getLineProps({ line });
                     return (
                       <div
                         key={i}
@@ -120,9 +120,10 @@ export function FileViewer({ path, content, language, onClose }: FileViewerProps
                           {i + 1}
                         </span>
                         <span className="table-cell">
-                          {line.map((token, key) => (
-                            <span key={key} {...getTokenProps({ token, key })} />
-                          ))}
+                          {line.map((token, index) => {
+                            const { key: _key, ...tokenProps } = getTokenProps({ token });
+                            return <span key={index} {...tokenProps} />;
+                          })}
                         </span>
                       </div>
                     );
