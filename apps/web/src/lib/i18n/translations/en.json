@@ -72,5 +72,14 @@
     "select": "Language",
     "en": "English",
     "ko": "한국어"
+  },
+  "settings": {
+    "title": "Settings",
+    "projectsPath": {
+      "title": "Projects Folder",
+      "description": "Location where your projects are stored",
+      "saved": "Settings saved successfully",
+      "note": "New projects will be created in this folder. Existing projects are not affected."
+    }
   }
 }

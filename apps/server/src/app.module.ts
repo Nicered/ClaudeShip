@@ -7,6 +7,7 @@ import { ProjectModule } from "./project/project.module";
 import { ChatModule } from "./chat/chat.module";
 import { PreviewModule } from "./preview/preview.module";
 import { FileModule } from "./file/file.module";
+import { SettingsModule } from "./settings/settings.module";
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { FileModule } from "./file/file.module";
     ChatModule,
     PreviewModule,
     FileModule,
+    SettingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

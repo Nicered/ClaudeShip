@@ -72,5 +72,14 @@
     "select": "언어",
     "en": "English",
     "ko": "한국어"
+  },
+  "settings": {
+    "title": "설정",
+    "projectsPath": {
+      "title": "프로젝트 폴더",
+      "description": "프로젝트가 저장되는 위치",
+      "saved": "설정이 저장되었습니다",
+      "note": "새 프로젝트는 이 폴더에 생성됩니다. 기존 프로젝트에는 영향을 주지 않습니다."
+    }
   }
 }

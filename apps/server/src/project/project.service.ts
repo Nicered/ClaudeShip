@@ -1,23 +1,17 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateProjectDto } from "./dto/create-project.dto";
-import { ConfigService } from "@nestjs/config";
+import { SettingsService } from "../settings/settings.service";
 import { randomUUID } from "crypto";
 import * as path from "path";
 import * as fs from "fs/promises";
 
 @Injectable()
 export class ProjectService {
-  private readonly projectsBasePath: string;
-
   constructor(
     private prisma: PrismaService,
-    private configService: ConfigService
-  ) {
-    this.projectsBasePath =
-      this.configService.get<string>("PROJECTS_BASE_PATH") ||
-      path.join(process.env.HOME || "/tmp", "claudeship-projects");
-  }
+    private settingsService: SettingsService
+  ) {}
 
   async findAll() {
     return this.prisma.project.findMany({
@@ -47,7 +41,8 @@ export class ProjectService {
   async create(dto: CreateProjectDto) {
     // Use UUID for folder name to avoid issues with special characters
     const folderId = randomUUID();
-    const projectPath = path.join(this.projectsBasePath, folderId);
+    const projectsBasePath = await this.settingsService.getProjectsBasePath();
+    const projectPath = path.join(projectsBasePath, folderId);
 
     // Create project directory
     await fs.mkdir(projectPath, { recursive: true });
