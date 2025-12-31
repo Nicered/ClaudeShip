@@ -60,20 +60,5 @@ jobs:
           echo "Updating version to ${{ inputs.version }}"
           npm version ${{ inputs.version }} --no-git-tag-version --allow-same-version
 
-      - name: Debug info
-        run: |
-          echo "=== npm version ==="
-          npm --version
-          echo "=== node version ==="
-          node --version
-          echo "=== .npmrc content ==="
-          cat ~/.npmrc || echo "No .npmrc found"
-          echo "=== npm config ==="
-          npm config list
-          echo "=== GitHub context ==="
-          echo "Repository: ${{ github.repository }}"
-          echo "Workflow: ${{ github.workflow }}"
-          echo "Environment: ${{ github.environment }}"
-
       - name: Publish to npm with provenance
         run: npm publish --provenance --access public

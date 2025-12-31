@@ -1,0 +1,6 @@
+.env
+.env.*
+!.env.example
+src/
+*.spec.ts
+*.test.ts

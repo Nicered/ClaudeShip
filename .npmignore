@@ -8,9 +8,9 @@ dist/
 
 # Development files
 *.log
-.env
-.env.*
-!.env.example
+**/.env
+**/.env.*
+!**/.env.example
 
 # IDE
 .idea/
