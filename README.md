@@ -236,38 +236,7 @@ Contributions are welcome! Please follow the commit message convention:
 ```
 
 **Types**: `FEAT`, `FIX`, `DOCS`, `STYLE`, `REFACTOR`, `TEST`, `CHORE`, `PERF`, `CI`, `BUILD`
-
 ---
-
-## Releasing
-
-Releases are automated via GitHub Actions. When you create a GitHub release:
-
-1. **Create a release** on GitHub with a tag like `v1.0.0`
-2. **GitHub Actions automatically**:
-   - Builds the project
-   - Updates package.json version from the tag
-   - Publishes to npm
-
-### Manual Release
-
-```bash
-# Bump version
-npm version patch  # or minor, major
-
-# Push with tags
-git push && git push --tags
-```
-
-### Required Secrets
-
-For npm publishing, add `NPM_TOKEN` to your repository secrets:
-
-1. Generate token at [npmjs.com/settings/tokens](https://www.npmjs.com/settings/tokens)
-2. Add to GitHub: Settings → Secrets → Actions → `NPM_TOKEN`
-
----
-
 ## License
 
 MIT
