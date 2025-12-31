@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **대화**: 항상 한글로 응답
 - **문서**: 모든 문서(md 파일 등)는 한글로 작성
 - **코드**: 영어로 작성 (변수명, 함수명, 주석, docstring, 파일명 등)
-- **커밋 메시지**: 한글로 작성
+- **커밋 메시지**: 영어로 작성
 
 ## 폴더 구조
 
@@ -62,31 +62,31 @@ Extractor -> Result: 추출
 커밋 메시지는 다음 형식을 따름 (git hook으로 자동 검증):
 
 ```
-[TYPE] 제목
+[TYPE] Title in English
 
-- 불릿 포인트 (선택, 최대 3줄)
+- Bullet points (optional, max 3 lines)
 ```
 
 **허용되는 TYPE**:
-| TYPE | 설명 |
-|------|------|
-| `FEAT` | 새로운 기능 |
-| `FIX` | 버그 수정 |
-| `DOCS` | 문서 변경 |
-| `STYLE` | 코드 포맷팅 |
-| `REFACTOR` | 리팩토링 |
-| `TEST` | 테스트 |
-| `CHORE` | 기타 작업 |
-| `PERF` | 성능 개선 |
+| TYPE | Description |
+|------|-------------|
+| `FEAT` | New feature |
+| `FIX` | Bug fix |
+| `DOCS` | Documentation |
+| `STYLE` | Code formatting |
+| `REFACTOR` | Refactoring |
+| `TEST` | Tests |
+| `CHORE` | Miscellaneous |
+| `PERF` | Performance |
 | `CI` | CI/CD |
-| `BUILD` | 빌드 설정 |
+| `BUILD` | Build config |
 
 **예시**:
 ```
-[FEAT] 사용자 인증 기능 추가
+[FEAT] Add user authentication
 
-- JWT 토큰 기반 인증 구현
-- 로그인/로그아웃 API 추가
+- Implement JWT token-based auth
+- Add login/logout API
 ```
 
 **주의**: Claude 서명은 git hook에서 자동 제거됨
