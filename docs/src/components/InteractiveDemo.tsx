@@ -93,11 +93,15 @@ export function InteractiveDemo({ locale }: InteractiveDemoProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Use block: 'nearest' to prevent page scroll
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
 
   useEffect(() => {
-    scrollToBottom();
+    // Only scroll when there are messages
+    if (messages.length > 0) {
+      scrollToBottom();
+    }
   }, [messages, currentToolIndex]);
 
   const simulateResponse = async (userInput: string) => {
