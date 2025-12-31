@@ -5,8 +5,8 @@
 <h1 align="center">ClaudeShip</h1>
 
 <p align="center">
-  <strong>Build web applications with natural language</strong><br>
-  Describe what you want, AI writes the code
+  <strong>AI-Powered Web Development Environment</strong><br>
+  Describe what you want → Watch AI build it → See live preview
 </p>
 
 <p align="center">
@@ -19,17 +19,25 @@
 <p align="center">
   <a href="https://nicered.github.io/ClaudeShip">Website</a> •
   <a href="#quick-start">Quick Start</a> •
-  <a href="#features">Features</a> •
-  <a href="./docs/README.ko.md">한국어</a>
+  <a href="#features">Features</a>
 </p>
 
 ---
 
 ## What is ClaudeShip?
 
-ClaudeShip is an AI-powered development environment that transforms how you build web applications. Instead of writing code line by line, simply describe what you want in natural language — the AI generates, modifies, and runs your code in real-time.
+ClaudeShip is an **AI-powered development environment** that lets you build web applications using natural language.
 
-Think of it as having an experienced developer working alongside you, instantly translating your ideas into working code while you watch the live preview update.
+Instead of writing code line by line, simply describe what you want to build. The AI generates code, installs packages, and runs your app in real-time. Think of it as **Replit + Cursor** combined into a local development environment.
+
+### Why ClaudeShip?
+
+| Traditional Way | ClaudeShip |
+|----------------|------------|
+| Write code manually | Describe in natural language |
+| Build → Refresh → Repeat | Real-time live preview |
+| Debug error messages | AI auto-fixes issues |
+| Search documentation | Solve through conversation |
 
 ---
 
@@ -37,80 +45,67 @@ Think of it as having an experienced developer working alongside you, instantly 
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                         ClaudeShip Workflow                          │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│   1. Describe        2. AI Generates       3. Live Preview          │
-│   ┌─────────┐        ┌─────────────┐       ┌─────────────┐          │
-│   │  "Make  │   →    │  Claude AI  │   →   │   Running   │          │
-│   │  a todo │        │  writes     │       │   App in    │          │
-│   │  app"   │        │  code       │       │   Browser   │          │
-│   └─────────┘        └─────────────┘       └─────────────┘          │
-│                                                                      │
-│   ┌──────────────────────────────────────────────────────────────┐  │
-│   │                     Real-time Interface                       │  │
-│   │  ┌────────────┐  ┌────────────────┐  ┌──────────────────┐    │  │
-│   │  │   Files    │  │     Chat       │  │    Preview       │    │  │
-│   │  │  Explorer  │  │   (You + AI)   │  │  (Your App)      │    │  │
-│   │  └────────────┘  └────────────────┘  └──────────────────┘    │  │
-│   └──────────────────────────────────────────────────────────────┘  │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
+│                        ClaudeShip Interface                         │
+├──────────────┬────────────────────────┬────────────────────────────┤
+│              │                        │                            │
+│   📁 Files   │      💬 Chat           │      👁 Live Preview       │
+│              │                        │                            │
+│   src/       │  You: "Create a       │   ┌──────────────────┐     │
+│   ├─ app/    │        todo app"      │   │   My Todo List   │     │
+│   ├─ comp/   │                        │   │   ☐ Learn AI     │     │
+│   └─ lib/    │  AI: Creating todo     │   │   ☑ Setup env    │     │
+│              │      app with...       │   └──────────────────┘     │
+│              │                        │                            │
+└──────────────┴────────────────────────┴────────────────────────────┘
 ```
 
-1. **Start a conversation** — Tell the AI what you want to build
-2. **Watch the magic** — AI generates files, installs packages, runs commands
-3. **See it live** — Your app runs in a live preview as changes happen
-4. **Iterate naturally** — Keep chatting to refine and add features
+1. **💬 Chat** — Describe what you want to build in natural language
+2. **⚡ Generate** — AI creates code, installs packages, sets up file structure
+3. **👁 Preview** — Changes are reflected in the live preview in real-time
+4. **🔄 Iterate** — Keep chatting to add features and make changes
 
 ---
 
-## Key Features
+## Features
 
-### Natural Language Development
-Describe your app in plain English (or Korean). No need to know the exact syntax — the AI understands your intent and writes production-ready code.
-
+### 🗣 Natural Language Development
 ```
-"Create a todo list with add, complete, and delete features"
-"Add a dark mode toggle to the header"
-"Connect to a SQLite database and show user data"
+"Create a login page"
+"Add a dark mode toggle"
+"Connect to a database and show user list"
 ```
 
-### Conversation Memory
-The AI remembers your entire conversation history. Continue where you left off, reference previous changes, and build incrementally without re-explaining context.
+### 💾 Conversation Memory
+Your chat history is saved, so you can continue where you left off. No need to re-explain context — just keep the conversation going naturally.
 
-### Live Preview
-See your changes instantly. ClaudeShip runs a development server that hot-reloads as the AI modifies your code, giving you immediate visual feedback.
+### ⚡ Auto-Refresh Preview
+Preview automatically refreshes when code changes. Like Replit, it detects file changes and reflects them instantly.
 
-### File Explorer
-Browse your project structure in a read-only tree view. Click any file to view its contents with syntax highlighting, just like in VS Code.
+### 📂 File Explorer
+Browse your project structure in a tree view. Click any file to view its contents with syntax highlighting.
 
-### Full-Stack Support
-Choose your stack when creating a project:
+### 🔧 Full-Stack Support
 
 | Configuration | Frontend | Backend | Database |
-|--------------|----------|---------|----------|
-| **Frontend Only** | Next.js 15 + TypeScript | — | — |
-| **+ Express** | Next.js 15 | Express + Prisma | SQLite/PostgreSQL |
-| **+ FastAPI** | Next.js 15 | FastAPI + SQLAlchemy | SQLite/PostgreSQL |
+|---------------|----------|---------|----------|
+| **Frontend Only** | Next.js 15 | — | — |
+| **+ Express** | Next.js 15 | Express + Prisma | SQLite |
+| **+ FastAPI** | Next.js 15 | FastAPI + SQLAlchemy | SQLite |
 
-### Multi-Project
-Run up to 99 projects simultaneously with automatic port allocation. Each project gets its own isolated environment.
-
-### Internationalization
-Full English and Korean UI support. Switch languages anytime from the header.
+### 🌐 Internationalization
+English and Korean UI support. Switch languages anytime from the header.
 
 ---
 
 ## Quick Start
 
-### One Command Install
+### One Command
 
 ```bash
 npx claudeship
 ```
 
-That's it! Open [http://localhost:13000](http://localhost:13000) and start building.
+Open [http://localhost:13000](http://localhost:13000) and start building!
 
 ### Prerequisites
 
@@ -119,109 +114,95 @@ That's it! Open [http://localhost:13000](http://localhost:13000) and start build
 - **Claude Code CLI** — [claude.ai/code](https://claude.ai/code)
 
 ```bash
-# Check if you have all requirements
+# Check requirements
 npx claudeship doctor
 ```
 
 ### Installation Options
 
-#### Option 1: npx (Recommended)
-
 ```bash
+# Option 1: npx (Recommended)
 npx claudeship
-```
 
-#### Option 2: Global Install
-
-```bash
+# Option 2: Global install
 npm install -g claudeship
 claudeship start
-```
 
-#### Option 3: From Source
-
-```bash
+# Option 3: From source
 git clone https://github.com/nicered/claudeship.git
 cd claudeship
 pnpm install
 pnpm dev
 ```
 
-### CLI Commands
+### CLI Options
 
 ```bash
 claudeship              # Start ClaudeShip
-claudeship start        # Same as above
 claudeship doctor       # Check system requirements
-claudeship --help       # Show help
 claudeship -p 3000      # Custom web port
 claudeship -s 4000      # Custom API port
 ```
 
 ---
 
-## Architecture
-
-ClaudeShip is a monorepo with three main packages:
-
-```
-claudeship/
-├── apps/
-│   ├── web/              # Next.js 15 frontend
-│   │   ├── components/   # React components (Chat, Preview, FileExplorer)
-│   │   ├── stores/       # Zustand state management
-│   │   └── lib/          # Utilities, i18n, API client
-│   │
-│   └── server/           # NestJS 10 backend
-│       ├── chat/         # Claude Code CLI integration
-│       ├── project/      # Project CRUD operations
-│       ├── preview/      # Dev server management
-│       └── file/         # File tree & content API
-│
-├── packages/
-│   └── shared/           # Shared TypeScript types
-│
-└── projects/             # User-generated projects (gitignored)
-```
-
-### Tech Stack
-
-**Frontend**: Next.js 15 (App Router), TypeScript, shadcn/ui, Tailwind CSS, Zustand
-
-**Backend**: NestJS 10, Prisma ORM, SQLite, Server-Sent Events (SSE)
-
-**AI Integration**: Claude Code CLI with streaming output
-
----
-
 ## Example Prompts
 
-Get started with these example prompts:
-
 ```
-"Create a blog with markdown support and a dark theme"
+"Create a blog with markdown support and dark theme"
 
-"Build a dashboard showing sales charts with recharts"
+"Build a dashboard showing sales charts"
 
-"Make a kanban board where I can drag tasks between columns"
+"Make a kanban board with drag-and-drop tasks"
 
-"Create a REST API for user authentication with JWT"
+"Create a user authentication API with JWT"
 
 "Add form validation with error messages to the signup page"
 ```
 
 ---
 
-## Available Commands
+## Architecture
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start all development servers |
-| `pnpm dev:web` | Start frontend only (port 13000) |
-| `pnpm dev:server` | Start backend only (port 14000) |
-| `pnpm build` | Production build |
-| `pnpm lint` | Run ESLint |
-| `pnpm type-check` | TypeScript type checking |
+```
+claudeship/
+├── apps/
+│   ├── web/              # Next.js 15 frontend
+│   │   ├── components/   # Chat, Preview, FileExplorer
+│   │   ├── stores/       # Zustand state
+│   │   └── lib/          # Utilities, i18n
+│   │
+│   └── server/           # NestJS 10 backend
+│       ├── chat/         # Claude Code CLI integration
+│       ├── project/      # Project management
+│       ├── preview/      # Dev server + file watcher
+│       └── file/         # File tree API
+│
+├── packages/
+│   └── shared/           # TypeScript types
+│
+└── projects/             # User projects (gitignored)
+```
+
+### Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Frontend | Next.js 15, TypeScript, shadcn/ui, Tailwind CSS, Zustand |
+| Backend | NestJS 10, Prisma, SQLite, SSE |
+| AI | Claude Code CLI (streaming) |
+| File Watch | chokidar |
+
+---
+
+## Development
+
+```bash
+pnpm dev          # Start all dev servers
+pnpm build        # Production build
+pnpm type-check   # TypeScript check
+pnpm lint         # Run ESLint
+```
 
 ---
 
@@ -232,11 +213,13 @@ Contributions are welcome! Please follow the commit message convention:
 ```
 [TYPE] Title
 
-- Bullet point (optional, max 4 lines)
+- Bullet point (max 4 lines)
 ```
 
 **Types**: `FEAT`, `FIX`, `DOCS`, `STYLE`, `REFACTOR`, `TEST`, `CHORE`, `PERF`, `CI`, `BUILD`
+
 ---
+
 ## License
 
 MIT

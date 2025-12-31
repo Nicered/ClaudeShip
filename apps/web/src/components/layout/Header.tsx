@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Settings, Ship, ArrowLeft } from "lucide-react";
+import Image from "next/image";
+import { Settings, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useTranslation } from "@/lib/i18n";
@@ -27,9 +28,7 @@ export function Header({ title, showBack, backHref = "/" }: HeaderProps) {
               </Button>
             </Link>
           ) : (
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-              <Ship className="h-5 w-5 text-primary" />
-            </div>
+            <Image src="/logo.svg" alt="ClaudeShip" width={36} height={36} className="rounded-lg" />
           )}
           <h1 className="text-lg font-semibold">{displayTitle}</h1>
         </div>
