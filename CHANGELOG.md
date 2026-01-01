@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.10](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.9...claudeship-v0.2.10) (2026-01-01)
+
+
+### Features
+
+* Add preview restart API and improve layout ([b601646](https://github.com/Nicered/ClaudeShip/commit/b601646713291f62df3b7c298c2fe5bf2048a417))
+* Add preview restart API and improve layout ([8e42230](https://github.com/Nicered/ClaudeShip/commit/8e42230ccf3ec4616f942b63b1d686d899e65b71))
+
 ## [0.2.9](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.8...claudeship-v0.2.9) (2026-01-01)
 
 
