@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.8](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.7...claudeship-v0.2.8) (2026-01-01)
+
+
+### Bug Fixes
+
+* Fix preview lifecycle and clear files after send ([85d413b](https://github.com/Nicered/ClaudeShip/commit/85d413bafec399eac8bb0f82e8ffafbabf90bf1e))
+* Fix preview lifecycle and clear files after send ([bf4bc89](https://github.com/Nicered/ClaudeShip/commit/bf4bc89b5ee73031127edf7afe3a89bfa51043a2))
+* Increase file upload size limit to 100MB ([fdd811d](https://github.com/Nicered/ClaudeShip/commit/fdd811d3fe1c5e4299a882f1fdc2d1ef3d7de3ec))
+
 ## [0.2.7](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.6...claudeship-v0.2.7) (2026-01-01)
 
 
