@@ -29,7 +29,7 @@ const ALLOWED_FILE_TYPES = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 ];
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 const MAX_FILES = 5;
 
 export function MessageInput({ onSend, projectId, disabled, isStreaming, queueCount = 0 }: MessageInputProps) {

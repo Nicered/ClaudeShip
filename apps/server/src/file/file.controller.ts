@@ -34,7 +34,7 @@ export class FileController {
   @Post("upload")
   @UseInterceptors(
     FilesInterceptor("files", 5, {
-      limits: { fileSize: 10 * 1024 * 1024 },
+      limits: { fileSize: 100 * 1024 * 1024 },
       fileFilter: (req, file, cb) => {
         const allowedMimes = [
           "image/png",
