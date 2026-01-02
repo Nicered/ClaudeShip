@@ -385,6 +385,7 @@ The marker will automatically trigger a restart and won't be visible to the user
 
 - **NEVER run \`uvicorn\`, \`npm run dev\`, \`npm start\`, or any server-starting commands** - The preview system handles this
 - **NEVER run long-running processes or commands that don't terminate**
+- **NEVER use process control commands** like \`kill\`, \`pkill\`, \`fuser -k\`, \`lsof\` to manage servers - Use \`<restart-preview />\` marker instead
 - Never use Node.js or non-Python backend code
 - Never skip database model definition
 - Never hardcode API URLs (use environment variables)

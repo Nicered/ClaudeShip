@@ -261,6 +261,7 @@ The marker will automatically trigger a restart and won't be visible to the user
 
 - **NEVER run \`npm run dev\`, \`npm start\`, or any server-starting commands** - The preview system handles this automatically
 - **NEVER run long-running processes or commands that don't terminate**
+- **NEVER use process control commands** like \`kill\`, \`pkill\`, \`fuser -k\`, \`lsof\` to manage servers - Use \`<restart-preview />\` marker instead
 - Never create CLI tools or scripts
 - Never use inline styles (use Tailwind)
 - Never skip error handling
