@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.13](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.12...claudeship-v0.2.13) (2026-01-03)
+
+
+### Features
+
+* Add agent prompt strategies and project context API ([3e9dc9f](https://github.com/Nicered/ClaudeShip/commit/3e9dc9fe9104aaf80d3e37cd20ee74f7b0aac014))
+* Add preview enhancement Phase 1 features ([07483f4](https://github.com/Nicered/ClaudeShip/commit/07483f4c98542471d32e8de6f76e607473e57f9a))
+* Add preview enhancement Phase 2 features ([5aae80e](https://github.com/Nicered/ClaudeShip/commit/5aae80ec6f3b2c9dc08eb83316e1f04e0d8e985f))
+* Add preview enhancement Phase 3 features ([c77a49c](https://github.com/Nicered/ClaudeShip/commit/c77a49c7738e47450d05a571d30bc736b40050f9))
+* Preview Enhancement ([#31](https://github.com/Nicered/ClaudeShip/issues/31)) ([95c8e7f](https://github.com/Nicered/ClaudeShip/commit/95c8e7f5ef3e831f9420647fbdcc706e03623d2a))
+
 ## [0.2.12](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.11...claudeship-v0.2.12) (2026-01-02)
 
 
