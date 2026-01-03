@@ -8,6 +8,7 @@ import { ChatModule } from "./chat/chat.module";
 import { PreviewModule } from "./preview/preview.module";
 import { FileModule } from "./file/file.module";
 import { SettingsModule } from "./settings/settings.module";
+import { DatabaseModule } from "./database/database.module";
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { SettingsModule } from "./settings/settings.module";
     PreviewModule,
     FileModule,
     SettingsModule,
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
