@@ -95,6 +95,24 @@ Browse your project structure in a tree view. Click any file to view its content
 ### 🌐 Internationalization
 English and Korean UI support. Switch languages anytime from the header.
 
+### 📱 Responsive Preview
+Test your app on different device sizes. Switch between Desktop, Tablet (768px), and Mobile (375px) views instantly.
+
+### 🖥 Console & Error Overlay
+View real-time server logs and browser console output. Build errors are displayed directly on the preview with file location and stack trace.
+
+### 🗄 Database Viewer
+Browse and manage your SQLite database directly in the UI. View tables, execute SQL queries, and edit data without leaving ClaudeShip.
+
+### ⏪ Checkpoint System
+Git-based checkpoint system for easy rollback. Create snapshots of your work and restore to any previous state with one click.
+
+### 🧪 Browser Testing
+Create and run automated browser tests using Playwright. Define test scenarios with clicks, form fills, and assertions.
+
+### 🔐 Environment Variables
+Manage `.env` files through a visual editor. Sensitive values are masked by default for security.
+
 ---
 
 ## Quick Start
