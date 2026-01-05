@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.14](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.13...claudeship-v0.2.14) (2026-01-05)
+
+
+### Bug Fixes
+
+* Escape quotes in TestRunner.tsx to fix build error ([277a76a](https://github.com/Nicered/ClaudeShip/commit/277a76af57171648e448c8764146a07cc2568672))
+* Escape quotes in TestRunner.tsx to fix build error ([4bd5db0](https://github.com/Nicered/ClaudeShip/commit/4bd5db0a5a93a7cf26d6f54e6afc94285d004041))
+
 ## [0.2.13](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.12...claudeship-v0.2.13) (2026-01-03)
 
 
