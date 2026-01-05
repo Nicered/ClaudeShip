@@ -427,7 +427,7 @@ export function TestRunner({ projectId }: TestRunnerProps) {
                         )}
                         {step.value && (
                           <span className="ml-2 text-sm text-muted-foreground">
-                            = "{step.value}"
+                            = &quot;{step.value}&quot;
                           </span>
                         )}
                       </div>
