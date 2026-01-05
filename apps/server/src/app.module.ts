@@ -12,6 +12,7 @@ import { DatabaseModule } from "./database/database.module";
 import { TestingModule } from "./testing/testing.module";
 import { CheckpointModule } from "./checkpoint/checkpoint.module";
 import { ProjectContextModule } from "./project-context/project-context.module";
+import { EnvModule } from "./env/env.module";
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ProjectContextModule } from "./project-context/project-context.module";
     TestingModule,
     CheckpointModule,
     ProjectContextModule,
+    EnvModule,
   ],
   controllers: [AppController],
   providers: [AppService],

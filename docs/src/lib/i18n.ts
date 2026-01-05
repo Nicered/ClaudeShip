@@ -27,23 +27,23 @@ export const translations = {
         },
         {
           title: 'Live Preview',
-          description: 'See your app update in real-time as Claude writes the code.',
+          description: 'Real-time preview with console logs, error overlay, and responsive device modes.',
         },
         {
           title: 'Full-Stack',
-          description: 'Frontend with Next.js, backend with Express or FastAPI. Your choice.',
+          description: 'Frontend with Next.js, backend with Express or FastAPI, SQLite database viewer.',
         },
         {
-          title: 'Ask & Build Modes',
-          description: 'Ask questions about your code or let Claude make changes.',
+          title: 'Checkpoint & Rollback',
+          description: 'Git-based snapshots. Save your progress and restore to any previous state.',
         },
         {
           title: 'File Explorer',
-          description: 'Browse and view all generated files with syntax highlighting.',
+          description: 'Browse files, manage environment variables, and view syntax-highlighted code.',
         },
         {
-          title: 'Multi-Project',
-          description: 'Manage up to 99 projects with automatic port allocation.',
+          title: 'Browser Testing',
+          description: 'Create automated test scenarios with clicks, form fills, and assertions.',
         },
       ],
     },
@@ -97,23 +97,23 @@ export const translations = {
         },
         {
           title: '실시간 프리뷰',
-          description: 'Claude가 코드를 작성하는 동안 실시간으로 결과를 확인하세요.',
+          description: '콘솔 로그, 에러 오버레이, 반응형 디바이스 모드를 지원하는 실시간 프리뷰.',
         },
         {
           title: '풀스택 지원',
-          description: 'Next.js 프론트엔드, Express 또는 FastAPI 백엔드.',
+          description: 'Next.js 프론트엔드, Express/FastAPI 백엔드, SQLite 데이터베이스 뷰어.',
         },
         {
-          title: 'Ask & Build 모드',
-          description: '코드에 대해 질문하거나 변경을 요청하세요.',
+          title: '체크포인트 & 롤백',
+          description: 'Git 기반 스냅샷. 진행 상황을 저장하고 이전 상태로 복원하세요.',
         },
         {
           title: '파일 탐색기',
-          description: '생성된 모든 파일을 구문 강조와 함께 탐색하세요.',
+          description: '파일 탐색, 환경 변수 관리, 구문 강조된 코드 보기.',
         },
         {
-          title: '멀티 프로젝트',
-          description: '자동 포트 할당으로 최대 99개 프로젝트를 관리하세요.',
+          title: '브라우저 테스팅',
+          description: '클릭, 폼 입력, 검증을 포함한 자동화된 테스트 시나리오 생성.',
         },
       ],
     },
