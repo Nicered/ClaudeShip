@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.15](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.14...claudeship-v0.2.15) (2026-01-05)
+
+
+### Features
+
+* Integrate Phase 2/3 components into workspace ([901349b](https://github.com/Nicered/ClaudeShip/commit/901349b727f67d0f6b99862a3aac56ed5b242516))
+* Integrate Phase 2/3 components into workspace ([7d5629d](https://github.com/Nicered/ClaudeShip/commit/7d5629dc9729982baf8a78a8651bdb44efadcd00))
+
+
+### Documentation
+
+* Add PR test checklist rules to CLAUDE.md ([6062e72](https://github.com/Nicered/ClaudeShip/commit/6062e729e1f273ff619e524ea087fcc29fb0738c))
+
 ## [0.2.14](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.13...claudeship-v0.2.14) (2026-01-05)
 
 
