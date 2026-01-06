@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.16](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.15...claudeship-v0.2.16) (2026-01-06)
+
+
+### Features
+
+* Auto-generate .env files during project setup ([142c690](https://github.com/Nicered/ClaudeShip/commit/142c690f00d7bae773ead4615d9a0962a63c014f))
+* Auto-generate .env files during project setup ([282690f](https://github.com/Nicered/ClaudeShip/commit/282690fbf0f8df52bf31090d9650fe156cff6821)), closes [#38](https://github.com/Nicered/ClaudeShip/issues/38)
+
 ## [0.2.15](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.14...claudeship-v0.2.15) (2026-01-05)
 
 
