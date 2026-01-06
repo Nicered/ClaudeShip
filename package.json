@@ -6,7 +6,7 @@
     "claudeship": "./bin/claudeship.js"
   },
   "scripts": {
-    "prepare": "bash scripts/setup-hooks.sh || true",
+    "prepare": "bash scripts/setup.sh || true",
     "dev": "node scripts/dev.js",
     "dev:parallel": "pnpm run --parallel dev",
     "dev:web": "pnpm --filter @claudeship/web dev",
