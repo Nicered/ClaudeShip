@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.17](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.16...claudeship-v0.2.17) (2026-01-06)
+
+
+### Features
+
+* Add Prisma database setup to setup.sh ([d571c57](https://github.com/Nicered/ClaudeShip/commit/d571c57a2b766f0f051ae7c8c3e969ceae1d78d1))
+* Add Prisma database setup to setup.sh ([1171dd0](https://github.com/Nicered/ClaudeShip/commit/1171dd08d0a629359aa0d1819b33220baac1ddb5)), closes [#41](https://github.com/Nicered/ClaudeShip/issues/41)
+
 ## [0.2.16](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.15...claudeship-v0.2.16) (2026-01-06)
 
 
