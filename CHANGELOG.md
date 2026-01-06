@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.18](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.17...claudeship-v0.2.18) (2026-01-06)
+
+
+### Bug Fixes
+
+* Skip --dangerously-skip-permissions when running as root ([c989bf0](https://github.com/Nicered/ClaudeShip/commit/c989bf04693acc5591b96aff3bb0d9f9a846f36b))
+* Skip --dangerously-skip-permissions when running as root ([0ad7b30](https://github.com/Nicered/ClaudeShip/commit/0ad7b30fb83f6a312a5336cb76f1465404a763c7)), closes [#44](https://github.com/Nicered/ClaudeShip/issues/44)
+
 ## [0.2.17](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.16...claudeship-v0.2.17) (2026-01-06)
 
 
