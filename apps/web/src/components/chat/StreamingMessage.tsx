@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useChatStore, type StreamingBlock } from "@/stores/useChatStore";
 import {
   FileText,
@@ -12,6 +13,8 @@ import {
   Loader2,
   ListTodo,
   Bot,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 import { AskUserQuestionBlock } from "./AskUserQuestionBlock";
@@ -21,6 +24,9 @@ interface StreamingMessageProps {
   isStreaming?: boolean;
   projectId: string;
 }
+
+const COLLAPSE_THRESHOLD = 5; // Number of tool blocks before collapsing
+const VISIBLE_WHEN_COLLAPSED = 2; // Number of items to show at start and end when collapsed
 
 const toolIcons: Record<string, React.ReactNode> = {
   Read: <FileText className="h-4 w-4" />,
@@ -89,6 +95,13 @@ function TextBlock({ content }: { content: string }) {
   return <MarkdownRenderer content={content} />;
 }
 
+function formatDuration(ms: number): string {
+  if (ms < 1000) {
+    return `${ms}ms`;
+  }
+  return `${(ms / 1000).toFixed(1)}s`;
+}
+
 function ToolUseBlock({ block }: { block: StreamingBlock }) {
   const isRunning = block.status === "running";
   const toolName = block.tool?.name || "Unknown";
@@ -113,17 +126,106 @@ function ToolUseBlock({ block }: { block: StreamingBlock }) {
         {getToolDisplayName(toolName)}
       </span>
       {getToolDescription(block) && (
-        <span className={`truncate ${isRunning ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground"}`}>
+        <span className={`truncate flex-1 ${isRunning ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground"}`}>
           {getToolDescription(block)}
+        </span>
+      )}
+      {block.duration !== undefined && (
+        <span className="text-xs text-muted-foreground ml-auto tabular-nums">
+          ({formatDuration(block.duration)})
         </span>
       )}
     </div>
   );
 }
 
+interface ToolBlockGroupProps {
+  blocks: StreamingBlock[];
+}
+
+function ToolBlockGroup({ blocks }: ToolBlockGroupProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const shouldCollapse = blocks.length > COLLAPSE_THRESHOLD;
+  const hiddenCount = blocks.length - (VISIBLE_WHEN_COLLAPSED * 2);
+
+  if (!shouldCollapse || isExpanded) {
+    return (
+      <div className="space-y-1">
+        {blocks.map((block) => (
+          <ToolUseBlock key={block.id} block={block} />
+        ))}
+        {shouldCollapse && isExpanded && (
+          <button
+            onClick={() => setIsExpanded(false)}
+            className="flex items-center gap-1 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ChevronUp className="h-4 w-4" />
+            <span>접기</span>
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  // Show first few, collapse button, then last few
+  const firstBlocks = blocks.slice(0, VISIBLE_WHEN_COLLAPSED);
+  const lastBlocks = blocks.slice(-VISIBLE_WHEN_COLLAPSED);
+
+  return (
+    <div className="space-y-1">
+      {firstBlocks.map((block) => (
+        <ToolUseBlock key={block.id} block={block} />
+      ))}
+      <button
+        onClick={() => setIsExpanded(true)}
+        className="flex items-center gap-1 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors w-full justify-center border border-dashed border-border rounded-md hover:bg-muted/50"
+      >
+        <ChevronDown className="h-4 w-4" />
+        <span>{hiddenCount}개 더 보기</span>
+      </button>
+      {lastBlocks.map((block) => (
+        <ToolUseBlock key={block.id} block={block} />
+      ))}
+    </div>
+  );
+}
+
+// Group consecutive blocks by type
+interface BlockGroup {
+  type: "tool_group" | "other";
+  blocks: StreamingBlock[];
+}
+
+function groupBlocks(blocks: StreamingBlock[]): BlockGroup[] {
+  const groups: BlockGroup[] = [];
+  let currentToolGroup: StreamingBlock[] = [];
+
+  for (const block of blocks) {
+    if (block.type === "tool_use") {
+      currentToolGroup.push(block);
+    } else {
+      // Flush current tool group if exists
+      if (currentToolGroup.length > 0) {
+        groups.push({ type: "tool_group", blocks: currentToolGroup });
+        currentToolGroup = [];
+      }
+      // Add non-tool block as single item
+      groups.push({ type: "other", blocks: [block] });
+    }
+  }
+
+  // Flush remaining tool group
+  if (currentToolGroup.length > 0) {
+    groups.push({ type: "tool_group", blocks: currentToolGroup });
+  }
+
+  return groups;
+}
+
 export function StreamingMessage({ blocks, isStreaming = true, projectId }: StreamingMessageProps) {
   const hasBlocks = blocks.length > 0;
-  const { respondToQuestion, pendingQuestion } = useChatStore();
+  const { respondToQuestion } = useChatStore();
+  const blockGroups = groupBlocks(blocks);
 
   const handleQuestionSubmit = (answers: Record<string, string>) => {
     respondToQuestion(projectId, answers);
@@ -135,25 +237,29 @@ export function StreamingMessage({ blocks, isStreaming = true, projectId }: Stre
         AI
       </div>
       <div className="flex-1 space-y-2 overflow-hidden">
-        {/* Render blocks in order */}
-        {blocks.map((block) => {
-          if (block.type === "text") {
-            return <TextBlock key={block.id} content={block.content || ""} />;
+        {/* Render block groups */}
+        {blockGroups.map((group, groupIndex) => {
+          if (group.type === "tool_group") {
+            return <ToolBlockGroup key={`group-${groupIndex}`} blocks={group.blocks} />;
           }
-          if (block.type === "tool_use") {
-            return <ToolUseBlock key={block.id} block={block} />;
-          }
-          if (block.type === "ask_user_question" && block.askUserQuestion) {
-            return (
-              <AskUserQuestionBlock
-                key={block.id}
-                data={block.askUserQuestion}
-                isWaiting={block.status === "waiting"}
-                onSubmit={handleQuestionSubmit}
-              />
-            );
-          }
-          return null;
+
+          // Render other blocks individually
+          return group.blocks.map((block) => {
+            if (block.type === "text") {
+              return <TextBlock key={block.id} content={block.content || ""} />;
+            }
+            if (block.type === "ask_user_question" && block.askUserQuestion) {
+              return (
+                <AskUserQuestionBlock
+                  key={block.id}
+                  data={block.askUserQuestion}
+                  isWaiting={block.status === "waiting"}
+                  onSubmit={handleQuestionSubmit}
+                />
+              );
+            }
+            return null;
+          });
         })}
 
         {/* Show thinking state when streaming but no blocks yet */}
