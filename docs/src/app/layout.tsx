@@ -11,6 +11,9 @@ export const metadata: Metadata = {
     description: 'Build web applications with natural language.',
     type: 'website',
   },
+  verification: {
+    google: 'GZ7MbCBtQBsW7nv9R3BATtvTiIj1wngXcwqB94jZwxA',
+  },
 };
 
 export default function RootLayout({
