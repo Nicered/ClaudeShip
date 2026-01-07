@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.19](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.18...claudeship-v0.2.19) (2026-01-07)
+
+
+### Bug Fixes
+
+* Add force-static export for robots and sitemap ([88482fc](https://github.com/Nicered/ClaudeShip/commit/88482fc9094890954360cca75e5d271e45dd370e))
+
+
+### Miscellaneous
+
+* Add Google Search Console verification meta tag ([bb7f084](https://github.com/Nicered/ClaudeShip/commit/bb7f0845f7d16f513e5fb60e8a17b6379079e148))
+* Add robots.txt and sitemap.xml for SEO ([c7ad1c3](https://github.com/Nicered/ClaudeShip/commit/c7ad1c32cc9842b46a07876c0dd4b4859c34b3a9))
+
 ## [0.2.18](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.17...claudeship-v0.2.18) (2026-01-06)
 
 
