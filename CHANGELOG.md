@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.20](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.19...claudeship-v0.2.20) (2026-01-09)
+
+
+### Features
+
+* Improve chat UI with duration display and collapsible tools ([cfca34f](https://github.com/Nicered/ClaudeShip/commit/cfca34f54172ccea9d935c8a930d9f29df48f1d4))
+* Improve chat UI with duration display and collapsible tools ([43457a5](https://github.com/Nicered/ClaudeShip/commit/43457a55109bbc10a9d1528e20eaa9c192db4293)), closes [#48](https://github.com/Nicered/ClaudeShip/issues/48)
+
 ## [0.2.19](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.18...claudeship-v0.2.19) (2026-01-07)
 
 
