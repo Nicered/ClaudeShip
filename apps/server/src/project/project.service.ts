@@ -34,6 +34,7 @@ export class ProjectService {
         name: true,
         projectType: true,
         backendFramework: true,
+        databaseProvider: true,
         updatedAt: true,
       },
     });

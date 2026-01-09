@@ -9,6 +9,11 @@ export enum BackendFramework {
   FASTAPI = "FASTAPI",
 }
 
+export enum DatabaseProvider {
+  POSTGRES_DOCKER = "POSTGRES_DOCKER",
+  SQLITE = "SQLITE",
+}
+
 export const projectTypeLabels: Record<ProjectType, string> = {
   [ProjectType.WEB]: "웹앱",
   [ProjectType.NATIVE]: "네이티브 앱",
@@ -43,5 +48,6 @@ export interface ProjectListItem {
   name: string;
   projectType: ProjectType;
   backendFramework: BackendFramework;
+  databaseProvider?: DatabaseProvider | null;
   updatedAt: Date;
 }
