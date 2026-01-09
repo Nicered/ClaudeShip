@@ -28,6 +28,8 @@ export interface StreamingBlock {
   askUserQuestion?: AskUserQuestionData;
   status?: "running" | "completed" | "error" | "waiting";
   result?: string;
+  timestamp?: number; // Unix timestamp in milliseconds
+  duration?: number; // Duration in milliseconds
 }
 
 export interface QueuedMessage {
@@ -60,6 +62,7 @@ interface ChatState {
   fetchActiveSession: (projectId: string) => Promise<void>;
   sendMessage: (projectId: string, content: string, fromQueue?: boolean) => Promise<void>;
   queueMessage: (projectId: string, content: string) => void;
+  deleteFromQueue: (id: string) => void;
   processQueue: (projectId: string) => Promise<void>;
   respondToQuestion: (projectId: string, answers: Record<string, string>) => Promise<void>;
   addMessage: (message: ChatMessage) => void;
@@ -263,19 +266,24 @@ export const useChatStore = create<ChatState>((set, get) => ({
                             input: data.tool.input,
                           },
                           status: "running",
+                          timestamp: Date.now(),
                         };
                         set((state) => ({
                           streamingBlocks: [...state.streamingBlocks, toolBlock],
                         }));
                       } else if (data.type === "tool_result") {
+                        const now = Date.now();
                         set((state) => {
                           const blocks = [...state.streamingBlocks];
                           for (let i = blocks.length - 1; i >= 0; i--) {
-                            if (blocks[i].type === "tool_use" && blocks[i].status === "running") {
+                            const block = blocks[i];
+                            if (block.type === "tool_use" && block.status === "running") {
+                              const duration = block.timestamp ? now - block.timestamp : undefined;
                               blocks[i] = {
-                                ...blocks[i],
+                                ...block,
                                 status: "completed",
                                 result: data.content,
+                                duration,
                               };
                               break;
                             }
@@ -338,6 +346,13 @@ export const useChatStore = create<ChatState>((set, get) => ({
     set((state) => ({
       messageQueue: [...state.messageQueue, queuedMessage],
       messages: [...state.messages, optimisticUserMessage],
+    }));
+  },
+
+  // Delete a message from the queue
+  deleteFromQueue: (id: string) => {
+    set((state) => ({
+      messageQueue: state.messageQueue.filter((m) => m.id !== id),
     }));
   },
 
@@ -487,7 +502,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
                   }));
                 }
               } else if (data.type === "tool_use" && data.tool) {
-                // Add tool_use block
+                // Add tool_use block with timestamp
                 const toolBlock: StreamingBlock = {
                   id: `tool-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
                   type: "tool_use",
@@ -496,21 +511,26 @@ export const useChatStore = create<ChatState>((set, get) => ({
                     input: data.tool.input,
                   },
                   status: "running",
+                  timestamp: Date.now(),
                 };
                 set((state) => ({
                   streamingBlocks: [...state.streamingBlocks, toolBlock],
                 }));
               } else if (data.type === "tool_result") {
-                // Update the last running tool_use block with result
+                // Update the last running tool_use block with result and duration
+                const now = Date.now();
                 set((state) => {
                   const blocks = [...state.streamingBlocks];
                   // Find the last running tool_use block
                   for (let i = blocks.length - 1; i >= 0; i--) {
-                    if (blocks[i].type === "tool_use" && blocks[i].status === "running") {
+                    const block = blocks[i];
+                    if (block.type === "tool_use" && block.status === "running") {
+                      const duration = block.timestamp ? now - block.timestamp : undefined;
                       blocks[i] = {
-                        ...blocks[i],
+                        ...block,
                         status: "completed",
                         result: data.content,
+                        duration,
                       };
                       break;
                     }

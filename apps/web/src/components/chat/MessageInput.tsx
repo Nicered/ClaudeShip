@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { ModeToggle } from "./ModeToggle";
 import { FilePreview } from "./FilePreview";
+import { QueuePreview } from "./QueuePreview";
 import { useChatStore } from "@/stores/useChatStore";
 
 interface MessageInputProps {
@@ -34,7 +35,7 @@ const MAX_FILES = 5;
 
 export function MessageInput({ onSend, projectId, disabled, isStreaming, queueCount = 0 }: MessageInputProps) {
   const { t } = useTranslation();
-  const { mode, attachedFiles, addFiles, removeFile, uploadFiles, isUploading } = useChatStore();
+  const { mode, attachedFiles, addFiles, removeFile, uploadFiles, isUploading, messageQueue, deleteFromQueue } = useChatStore();
   const [content, setContent] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -173,7 +174,7 @@ export function MessageInput({ onSend, projectId, disabled, isStreaming, queueCo
         </Button>
       </div>
       {(isStreaming || isUploading) && (
-        <div className="px-4 pb-4 flex items-center gap-2 text-xs text-muted-foreground">
+        <div className="px-4 pb-2 flex items-center gap-2 text-xs text-muted-foreground">
           {isUploading ? (
             <span className="flex items-center gap-1">
               <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500" />
@@ -185,14 +186,10 @@ export function MessageInput({ onSend, projectId, disabled, isStreaming, queueCo
               {t("chat.thinking")}
             </span>
           )}
-          {queueCount > 0 && (
-            <span className="flex items-center gap-1 text-blue-500">
-              <Clock className="h-3 w-3" />
-              {t("chat.queueCount", { count: queueCount })}
-            </span>
-          )}
         </div>
       )}
+      {/* Queue Preview */}
+      <QueuePreview items={messageQueue} onDelete={deleteFromQueue} />
     </div>
   );
 }
