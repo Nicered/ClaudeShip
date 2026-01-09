@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.21](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.20...claudeship-v0.2.21) (2026-01-09)
+
+
+### Features
+
+* Add database infrastructure auto-management ([93cc1d2](https://github.com/Nicered/ClaudeShip/commit/93cc1d28921d5b559c3cdbd5e49e389997ea7e89))
+* Add database infrastructure UI ([29eea5b](https://github.com/Nicered/ClaudeShip/commit/29eea5b6f639d8d80f305808b2dbaafd5fa979ab))
+* 데이터베이스 인프라 자동 관리 기능 ([f6f64bc](https://github.com/Nicered/ClaudeShip/commit/f6f64bc41d40e46b21dfe92ee4bdbafdaae5ead6))
+
 ## [0.2.20](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.19...claudeship-v0.2.20) (2026-01-09)
 
 
