@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Trash2, Globe, Smartphone, Server } from "lucide-react";
+import { Trash2, Globe, Smartphone, Server, Database } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { ProjectListItem } from "@claudeship/shared";
-import { ProjectType, BackendFramework, backendFrameworkLabels } from "@claudeship/shared";
+import { ProjectType, BackendFramework, DatabaseProvider } from "@claudeship/shared";
 import { useTranslation } from "@/lib/i18n";
 
 interface ProjectCardProps {
@@ -102,6 +102,16 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
               <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium">
                 <Server className="h-3 w-3" />
                 {project.backendFramework === BackendFramework.EXPRESS ? "Express" : "FastAPI"}
+              </span>
+            )}
+            {project.databaseProvider && (
+              <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                project.databaseProvider === DatabaseProvider.POSTGRES_DOCKER
+                  ? "bg-blue-500/10 text-blue-600"
+                  : "bg-amber-500/10 text-amber-600"
+              }`}>
+                <Database className="h-3 w-3" />
+                {project.databaseProvider === DatabaseProvider.POSTGRES_DOCKER ? "PostgreSQL" : "SQLite"}
               </span>
             )}
             <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs text-muted-foreground">

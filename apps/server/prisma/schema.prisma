@@ -8,15 +8,21 @@ datasource db {
 }
 
 model Project {
-  id               String           @id @default(uuid())
+  id               String            @id @default(uuid())
   name             String
   projectType      ProjectType
-  backendFramework BackendFramework @default(NONE)
+  backendFramework BackendFramework  @default(NONE)
   path             String
   description      String?
-  claudeSessionId  String?          // Claude Code CLI session ID for conversation continuity
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
+  claudeSessionId  String?           // Claude Code CLI session ID for conversation continuity
+
+  // Database infrastructure
+  databaseProvider  DatabaseProvider? // null means not yet created
+  databaseUrl       String?           // Connection URL (stored encrypted in production)
+  dockerContainerId String?           // Docker container ID for postgres_docker provider
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   messages Message[]
 
@@ -45,6 +51,11 @@ enum BackendFramework {
   NONE
   EXPRESS
   FASTAPI
+}
+
+enum DatabaseProvider {
+  POSTGRES_DOCKER
+  SQLITE
 }
 
 enum Role {

@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, Inject, forwardRef } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateProjectDto } from "./dto/create-project.dto";
 import { SettingsService } from "../settings/settings.service";
+import { DatabaseInfraService } from "../database/infra/database-infra.service";
 import { randomUUID } from "crypto";
 import * as path from "path";
 import * as fs from "fs/promises";
@@ -20,7 +21,9 @@ export interface EnvFile {
 export class ProjectService {
   constructor(
     private prisma: PrismaService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    @Inject(forwardRef(() => DatabaseInfraService))
+    private databaseInfraService: DatabaseInfraService
   ) {}
 
   async findAll() {
@@ -31,6 +34,7 @@ export class ProjectService {
         name: true,
         projectType: true,
         backendFramework: true,
+        databaseProvider: true,
         updatedAt: true,
       },
     });
@@ -67,7 +71,7 @@ export class ProjectService {
       await fs.mkdir(path.join(projectPath, "backend"), { recursive: true });
     }
 
-    // Create project in database
+    // Create project in database first (to get ID)
     const project = await this.prisma.project.create({
       data: {
         name: dto.name,
@@ -78,11 +82,49 @@ export class ProjectService {
       },
     });
 
-    return project;
+    // Create database infrastructure (Docker PostgreSQL or SQLite)
+    try {
+      const dbConfig = await this.databaseInfraService.createDatabase(
+        project.id,
+        projectPath
+      );
+
+      // Update project with database info
+      await this.prisma.project.update({
+        where: { id: project.id },
+        data: {
+          databaseProvider: dbConfig.provider === "postgres_docker" ? "POSTGRES_DOCKER" : "SQLITE",
+          databaseUrl: dbConfig.url,
+          dockerContainerId: dbConfig.provider === "postgres_docker"
+            ? (dbConfig as { containerId: string }).containerId
+            : null,
+        },
+      });
+    } catch (error) {
+      // Log error but don't fail project creation
+      console.warn("Failed to create database infrastructure:", error);
+    }
+
+    // Return updated project
+    return this.findOne(project.id);
   }
 
   async remove(id: string) {
     const project = await this.findOne(id);
+
+    // Clean up database infrastructure
+    if (project.databaseProvider) {
+      try {
+        await this.databaseInfraService.deleteDatabase(
+          id,
+          project.path,
+          project.databaseProvider === "POSTGRES_DOCKER" ? "postgres_docker" : "sqlite",
+          true // Remove data
+        );
+      } catch (error) {
+        console.warn("Failed to clean up database infrastructure:", error);
+      }
+    }
 
     // Delete from database
     await this.prisma.project.delete({
