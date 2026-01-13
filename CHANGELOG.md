@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.22](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.21...claudeship-v0.2.22) (2026-01-13)
+
+
+### Features
+
+* **docs:** Improve SEO and update icons to rocket logo ([4af92c8](https://github.com/Nicered/ClaudeShip/commit/4af92c8c1b58aa5fc0ff320cc387062bf0e3d161))
+
+
+### Bug Fixes
+
+* **docs:** Improve SEO for search engine indexing ([c128f52](https://github.com/Nicered/ClaudeShip/commit/c128f528828022426e94c44698392e0103111830))
+
 ## [0.2.21](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.20...claudeship-v0.2.21) (2026-01-09)
 
 
