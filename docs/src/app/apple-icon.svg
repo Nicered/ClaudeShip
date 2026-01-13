@@ -7,7 +7,7 @@
     </linearGradient>
   </defs>
   <rect width="180" height="180" rx="36" fill="url(#grad)"/>
-  <path d="M52 75 L82 75 L90 52 L98 98 L105 67 L128 67" stroke="white" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  <circle cx="90" cy="112" r="18" fill="white" opacity="0.9"/>
-  <path d="M84 112 L88 117 L96 108" stroke="#764ba2" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M90 28 C67 51 56 79 56 113 L90 96 L124 113 C124 79 113 51 90 28 Z" fill="white"/>
+  <circle cx="90" cy="73" r="14" fill="#764ba2"/>
+  <path d="M73 124 L90 152 L107 124" fill="white" opacity="0.7"/>
 </svg>
