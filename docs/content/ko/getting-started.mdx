@@ -1,0 +1,70 @@
+# 시작하기
+
+몇 분 만에 로컬 머신에서 ClaudeShip을 실행할 수 있습니다.
+
+## 사전 요구사항
+
+시작하기 전에 다음이 있는지 확인하세요:
+
+- **Node.js** >= 20
+- **pnpm** >= 9
+- **Claude Code CLI** - [claude.ai/code](https://claude.ai/code)에서 설치
+
+### 요구사항 확인
+
+```bash
+npx claudeship doctor
+```
+
+## 설치
+
+### 옵션 1: npx (권장)
+
+설치 불필요 - 바로 실행:
+
+```bash
+npx claudeship
+```
+
+### 옵션 2: 전역 설치
+
+```bash
+npm install -g claudeship
+claudeship start
+```
+
+### 옵션 3: 소스에서 설치
+
+```bash
+git clone https://github.com/nicered/claudeship.git
+cd claudeship
+pnpm install
+pnpm dev
+```
+
+## 첫 번째 프로젝트
+
+1. [http://localhost:13000](http://localhost:13000) 열기
+2. 새 프로젝트 생성
+3. AI와 채팅 시작
+
+```text
+"다크 모드가 있는 투두 앱 만들어줘"
+```
+
+AI가 코드를 생성하고, 의존성을 설치하며, 앱을 자동으로 실행하는 것을 지켜보세요!
+
+## CLI 옵션
+
+```bash
+claudeship              # ClaudeShip 시작
+claudeship doctor       # 시스템 요구사항 확인
+claudeship -p 3000      # 사용자 정의 웹 포트
+claudeship -s 4000      # 사용자 정의 API 포트
+```
+
+## 다음 단계
+
+- [기능](/docs/features) 살펴보기
+- [AI 채팅](/docs/features/chat) 알아보기
+- [예시 프롬프트](/docs/features/chat#예시-프롬프트) 시도해보기

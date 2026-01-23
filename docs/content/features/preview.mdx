@@ -1,0 +1,71 @@
+# Live Preview
+
+See your changes in real-time as AI writes code. The preview panel automatically refreshes when files are modified.
+
+## Features
+
+### Auto-Refresh
+
+Preview automatically detects file changes and refreshes the iframe. No manual refresh needed!
+
+Toggle auto-refresh with the ⚡ button in the preview header.
+
+### Device Simulation
+
+Test your app on different screen sizes:
+
+| Device | Size | Use Case |
+|--------|------|----------|
+| Desktop | 100% | Full desktop view |
+| Tablet | 768×1024 | iPad and tablets |
+| Mobile | 375×667 | iPhone and phones |
+
+### Console Viewer
+
+Switch to the **Console** tab to view:
+- Server logs (stdout/stderr)
+- Browser console output
+- Build errors
+- Runtime errors
+
+### Error Overlay
+
+Build errors are displayed directly on the preview with:
+- File location
+- Error message
+- Stack trace
+- Line numbers
+
+## Controls
+
+| Button | Action |
+|--------|--------|
+| ▶ Play | Start preview server |
+| ⬛ Stop | Stop preview server |
+| 🔄 Restart | Restart preview server |
+| ↻ Refresh | Manually refresh iframe |
+| ⛶ Open | Open in new tab |
+
+## Project Ready Status
+
+Before preview starts, ClaudeShip checks if your project is ready:
+
+### Frontend Only
+- `package.json` exists
+- `dev` script defined
+
+### Full Stack (Express)
+- Frontend requirements met
+- Backend `package.json` exists
+- Backend `dev` script defined
+
+### Full Stack (FastAPI)
+- Frontend requirements met
+- `requirements.txt` exists
+- `main.py` exists
+
+If any requirement is missing, you'll see a checklist in the preview panel.
+
+## Auto-Start
+
+Preview automatically starts when your project becomes ready. No need to manually click the start button!

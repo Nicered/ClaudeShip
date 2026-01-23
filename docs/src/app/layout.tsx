@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import 'nextra-theme-docs/style.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nicered.github.io'),

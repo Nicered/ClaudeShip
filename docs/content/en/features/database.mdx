@@ -1,0 +1,61 @@
+# Database Viewer
+
+Browse and manage your SQLite database directly in the UI. View tables, execute SQL queries, and edit data without leaving ClaudeShip.
+
+## Features
+
+### Table Browser
+
+- View all tables in your database
+- See row counts for each table
+- Browse table data with pagination
+
+### Data Grid
+
+For each table, view:
+- Column names and types
+- Primary key indicators
+- NULL value handling
+- Paginated results (50 rows per page)
+
+### SQL Query Editor
+
+Execute custom SQL queries:
+1. Click the **SQL** button in the header
+2. Type your query
+3. Press **Cmd+Enter** or click **Run**
+
+```sql
+SELECT * FROM users WHERE email LIKE '%@gmail.com'
+SELECT COUNT(*) FROM posts WHERE status = 'published'
+```
+
+### Delete Rows
+
+Delete individual rows with the trash icon. Primary key is used for identification.
+
+## Database Support
+
+ClaudeShip currently supports **SQLite** databases, which are automatically created when using:
+- Express + Prisma configuration
+- FastAPI + SQLAlchemy configuration
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| Cmd+Enter | Execute SQL query |
+
+## Usage
+
+1. Click the **Database** tab in the right panel
+2. Select a table from the sidebar
+3. Browse data or switch to SQL mode
+4. Execute queries as needed
+
+## Tips
+
+- Use SQL mode for complex queries
+- Delete operations require confirmation
+- Changes are reflected immediately
+- Refresh button reloads table list
