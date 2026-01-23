@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.23](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.22...claudeship-v0.2.23) (2026-01-23)
+
+
+### Features
+
+* **docs:** Add Nextra 4 docs viewer with Tailwind CSS v4 ([63ea28e](https://github.com/Nicered/ClaudeShip/commit/63ea28e763c77a18cc8ee0541cfe30cb7d8c9cbe))
+* **docs:** Add Nextra 4 docs viewer with Tailwind CSS v4 ([a7663b5](https://github.com/Nicered/ClaudeShip/commit/a7663b5380a117850056628d59efdfe2ee0b2540))
+
 ## [0.2.22](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.21...claudeship-v0.2.22) (2026-01-13)
 
 
