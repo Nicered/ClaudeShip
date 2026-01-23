@@ -54,6 +54,9 @@ export default function Home() {
             </div>
 
             <div className="hidden md:flex items-center gap-8">
+              <a href={`${basePath}/docs`} className="text-sm hover:text-primary-600 transition-colors">
+                {t.nav.docs}
+              </a>
               <a href="#features" className="text-sm hover:text-primary-600 transition-colors">
                 {t.nav.features}
               </a>

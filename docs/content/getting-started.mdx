@@ -1,0 +1,70 @@
+# Getting Started
+
+Get ClaudeShip running on your local machine in minutes.
+
+## Prerequisites
+
+Before you start, make sure you have:
+
+- **Node.js** >= 20
+- **pnpm** >= 9
+- **Claude Code CLI** - Install from [claude.ai/code](https://claude.ai/code)
+
+### Check Requirements
+
+```bash
+npx claudeship doctor
+```
+
+## Installation
+
+### Option 1: npx (Recommended)
+
+No installation needed - just run:
+
+```bash
+npx claudeship
+```
+
+### Option 2: Global Install
+
+```bash
+npm install -g claudeship
+claudeship start
+```
+
+### Option 3: From Source
+
+```bash
+git clone https://github.com/nicered/claudeship.git
+cd claudeship
+pnpm install
+pnpm dev
+```
+
+## Your First Project
+
+1. Open [http://localhost:13000](http://localhost:13000)
+2. Create a new project
+3. Start chatting with AI
+
+```text
+"Create a todo app with dark mode"
+```
+
+Watch as AI generates code, installs dependencies, and runs your app automatically!
+
+## CLI Options
+
+```bash
+claudeship              # Start ClaudeShip
+claudeship doctor       # Check system requirements
+claudeship -p 3000      # Custom web port
+claudeship -s 4000      # Custom API port
+```
+
+## What's Next?
+
+- Explore [Features](/docs/features)
+- Learn about [AI Chat](/docs/features/chat)
+- Try [Example Prompts](/docs/features/chat#example-prompts)

@@ -1,0 +1,73 @@
+# Checkpoints
+
+Git-based checkpoint system for easy rollback. Create snapshots of your work and restore to any previous state with one click.
+
+## Features
+
+### Auto-Detect Changes
+
+ClaudeShip automatically detects when you have uncommitted changes. The checkpoint panel shows "Unsaved changes" when files are modified.
+
+### Create Checkpoint
+
+1. Make changes to your project
+2. Click the **Checkpoint** tab
+3. Enter a checkpoint message
+4. Click **Save**
+
+### Timeline View
+
+See all your checkpoints in a chronological timeline:
+- Checkpoint message
+- Time since creation
+- Files changed count
+- Insertions (+) and deletions (-)
+
+### Diff Viewer
+
+Click any checkpoint to see:
+- List of changed files
+- File status (added/modified/deleted)
+- Line-by-line diff
+- Color-coded changes
+
+### Restore
+
+Rollback to any checkpoint:
+1. Click a checkpoint in the timeline
+2. Review the diff
+3. Click **Restore** button
+4. Confirm the restore
+
+## Checkpoint Information
+
+Each checkpoint tracks:
+- **Hash**: Git commit hash
+- **Message**: Your description
+- **Timestamp**: When created
+- **Files Changed**: Number of files modified
+- **Insertions**: Lines added
+- **Deletions**: Lines removed
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| Enter | Create checkpoint (when message is focused) |
+
+## Best Practices
+
+- Write descriptive checkpoint messages
+- Create checkpoints before major changes
+- Review diff before restoring
+- Use checkpoints instead of manual Git commands
+
+## Difference from Git
+
+Checkpoints are built on Git but simplified:
+- No need to use terminal
+- No branch management
+- No merge conflicts
+- One-click restore
+
+However, you can still use standard Git commands in your project if needed!

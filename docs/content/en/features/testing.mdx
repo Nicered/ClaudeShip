@@ -1,0 +1,70 @@
+# Browser Testing
+
+Create and run automated browser tests using Playwright. Define test scenarios with clicks, form fills, and assertions.
+
+## Features
+
+### Test Editor
+
+Write tests in a simple YAML format:
+
+```yaml
+name: "Login flow test"
+steps:
+  - goto: "http://localhost:3000/login"
+  - fill: "#email"
+    value: "user@example.com"
+  - fill: "#password"
+    value: "password123"
+  - click: "#login-button"
+  - assert: "#welcome-message"
+    contains: "Welcome"
+```
+
+### Run Tests
+
+Execute tests and see results:
+- Pass/fail status
+- Screenshot on failure
+- Console output
+- Execution time
+
+## Supported Actions
+
+| Action | Description |
+|--------|-------------|
+| `goto` | Navigate to URL |
+| `click` | Click element |
+| `fill` | Fill input field |
+| `assert` | Assert text content |
+| `screenshot` | Take screenshot |
+
+## Selectors
+
+Use standard CSS selectors:
+- ID: `#login-button`
+- Class: `.submit-btn`
+- Attribute: `[type="submit"]`
+- Combined: `form.login input#email`
+
+## Test Output
+
+After running tests:
+- ✅ Green checkmark for passed tests
+- ❌ Red X for failed tests
+- Screenshots saved for failures
+- Detailed error messages
+
+## Use Cases
+
+- Regression testing
+- Smoke testing
+- User flow validation
+- Form submission testing
+
+## Tips
+
+- Start with simple tests
+- Test critical user flows
+- Use specific selectors
+- Add assertions to verify results
