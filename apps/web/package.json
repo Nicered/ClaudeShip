@@ -1,6 +1,6 @@
 {
   "name": "@claudeship/web",
-  "version": "0.2.22",
+  "version": "0.2.23",
   "private": true,
   "scripts": {
     "dev": "node scripts/dev-with-recovery.mjs",
