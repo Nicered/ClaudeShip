@@ -7,7 +7,7 @@ import { ProjectList } from "@/components/project/ProjectList";
 import { CreateProjectModal } from "@/components/project/CreateProjectModal";
 import { useProjectStore } from "@/stores/useProjectStore";
 import { useTranslation } from "@/lib/i18n";
-import type { ProjectType } from "@claudeship/shared";
+import type { CreateProjectInput } from "@claudeship/shared";
 
 export default function Home() {
   const router = useRouter();
@@ -20,10 +20,7 @@ export default function Home() {
     fetchProjects();
   }, [fetchProjects]);
 
-  const handleCreateProject = async (data: {
-    name: string;
-    projectType: ProjectType;
-  }) => {
+  const handleCreateProject = async (data: CreateProjectInput) => {
     try {
       const project = await createProject(data);
       setIsModalOpen(false);

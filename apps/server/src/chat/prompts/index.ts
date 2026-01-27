@@ -2,6 +2,8 @@
  * System Prompt Selector
  *
  * 프로젝트 타입과 백엔드 프레임워크에 따라 적절한 시스템 프롬프트 반환
+ *
+ * @deprecated Use PromptBuilderService instead for dynamic prompt generation
  */
 
 import { ProjectType, BackendFramework } from "@prisma/client";
@@ -9,6 +11,9 @@ import { WEB_SYSTEM_PROMPT } from "./web-system-prompt";
 import { FULLSTACK_EXPRESS_PROMPT } from "./fullstack-express-prompt";
 import { FULLSTACK_FASTAPI_PROMPT } from "./fullstack-fastapi-prompt";
 
+/**
+ * @deprecated Use PromptBuilderService.build() instead
+ */
 export function getSystemPrompt(
   projectType: ProjectType,
   backendFramework: BackendFramework
@@ -29,6 +34,13 @@ export function getSystemPrompt(
   return WEB_SYSTEM_PROMPT;
 }
 
+// Legacy exports (for backwards compatibility)
 export { WEB_SYSTEM_PROMPT } from "./web-system-prompt";
 export { FULLSTACK_EXPRESS_PROMPT } from "./fullstack-express-prompt";
 export { FULLSTACK_FASTAPI_PROMPT } from "./fullstack-fastapi-prompt";
+
+// New modular exports
+export { PromptBuilderService } from "./prompt-builder.service";
+export * from "./sections/core";
+export * from "./frontend";
+export * from "./backend";

@@ -44,7 +44,8 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
           {
             id: project.id,
             name: project.name,
-            projectType: project.projectType,
+            appType: project.appType,
+            frontendFramework: project.frontendFramework,
             backendFramework: project.backendFramework,
             updatedAt: project.updatedAt,
           },
