@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.24](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.23...claudeship-v0.2.24) (2026-01-27)
+
+
+### Bug Fixes
+
+* Prevent Tailwind CSS version conflict between packages ([b523842](https://github.com/Nicered/ClaudeShip/commit/b523842d9491e2ac93f1901ca28d07e31ae53882))
+* Prevent Tailwind CSS version conflict between packages ([1dc2614](https://github.com/Nicered/ClaudeShip/commit/1dc26140f83e972ced3eb0ab5c9136959992907a))
+
 ## [0.2.23](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.22...claudeship-v0.2.23) (2026-01-23)
 
 
