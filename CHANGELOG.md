@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.25](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.24...claudeship-v0.2.25) (2026-01-27)
+
+
+### Features
+
+* Add conversational framework selection system ([f701006](https://github.com/Nicered/ClaudeShip/commit/f701006c897f2f2675cc481a49f09484bb91540f))
+* Add conversational framework selection system ([c417f2f](https://github.com/Nicered/ClaudeShip/commit/c417f2fa2955a23633dac31d499fd0fed00a9217))
+
 ## [0.2.24](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.23...claudeship-v0.2.24) (2026-01-27)
 
 
