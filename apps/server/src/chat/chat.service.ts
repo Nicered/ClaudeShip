@@ -1,12 +1,13 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { Observable, Subject, map, finalize } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { PrismaService } from "../prisma/prisma.service";
 import { ProjectService } from "../project/project.service";
 import { ClaudeCliService, ClaudeStreamEvent } from "./claude-cli.service";
-import { Role } from "@prisma/client";
+import { Role, FrontendFramework, BackendFramework } from "@prisma/client";
 import { randomUUID } from "crypto";
-import { getSystemPrompt } from "./prompts";
 import { ChatMode } from "./dto/send-message.dto";
+import { FrameworkDetectorService } from "./framework-detector.service";
+import { PromptBuilderService } from "./prompts/prompt-builder.service";
 
 // Ask mode system prompt addition
 const ASK_MODE_PROMPT = `
@@ -47,7 +48,9 @@ export class ChatService {
   constructor(
     private prisma: PrismaService,
     private projectService: ProjectService,
-    private claudeCliService: ClaudeCliService
+    private claudeCliService: ClaudeCliService,
+    private frameworkDetector: FrameworkDetectorService,
+    private promptBuilder: PromptBuilderService
   ) {}
 
   async getMessages(projectId: string, limit = 50, offset = 0) {
@@ -175,11 +178,50 @@ export class ChatService {
 
           const projectPath = await this.projectService.getProjectPath(projectId);
 
-          // Build prompt with system context based on project type and backend framework
-          const systemPrompt = getSystemPrompt(
-            project.projectType,
+          // Detect framework changes from user message
+          const detection = this.frameworkDetector.detect(
+            content,
+            project.frontendFramework,
             project.backendFramework
           );
+
+          // Update project if framework change detected with high confidence
+          let currentFrontend = project.frontendFramework;
+          let currentBackend = project.backendFramework;
+
+          if (detection.detected && detection.confidence >= 0.7) {
+            const updateData: {
+              frontendFramework?: FrontendFramework;
+              backendFramework?: BackendFramework;
+            } = {};
+
+            if (detection.frontendFramework) {
+              updateData.frontendFramework = detection.frontendFramework;
+              currentFrontend = detection.frontendFramework;
+            }
+            if (detection.backendFramework) {
+              updateData.backendFramework = detection.backendFramework;
+              currentBackend = detection.backendFramework;
+            }
+
+            await this.prisma.project.update({
+              where: { id: projectId },
+              data: updateData,
+            });
+
+            const notificationMsg =
+              this.frameworkDetector.generateNotificationMessage(detection);
+            if (notificationMsg) {
+              this.logger.log(notificationMsg);
+            }
+          }
+
+          // Build prompt with system context based on project frameworks
+          const systemPrompt = this.promptBuilder.build({
+            frontendFramework: currentFrontend,
+            backendFramework: currentBackend,
+            techStackConfig: project.techStackConfig,
+          });
 
           // If no session exists, include recent conversation history as context
           let conversationContext = "";

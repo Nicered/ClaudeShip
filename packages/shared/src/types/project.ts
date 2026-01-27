@@ -1,3 +1,6 @@
+import { FrontendFramework, TechStackConfig, AppType } from "./tech-stack";
+
+// @deprecated Use AppType instead
 export enum ProjectType {
   WEB = "WEB",
   NATIVE = "NATIVE",
@@ -7,7 +10,12 @@ export enum BackendFramework {
   NONE = "NONE",
   EXPRESS = "EXPRESS",
   FASTAPI = "FASTAPI",
+  DJANGO = "DJANGO",
+  NESTJS = "NESTJS",
 }
+
+export { FrontendFramework, AppType } from "./tech-stack";
+export type { TechStackConfig } from "./tech-stack";
 
 export enum DatabaseProvider {
   POSTGRES_DOCKER = "POSTGRES_DOCKER",
@@ -23,13 +31,18 @@ export const backendFrameworkLabels: Record<BackendFramework, string> = {
   [BackendFramework.NONE]: "프론트엔드 전용",
   [BackendFramework.EXPRESS]: "Express (Node.js)",
   [BackendFramework.FASTAPI]: "FastAPI (Python)",
+  [BackendFramework.DJANGO]: "Django (Python)",
+  [BackendFramework.NESTJS]: "NestJS (Node.js)",
 };
 
 export interface Project {
   id: string;
   name: string;
-  projectType: ProjectType;
+  appType: AppType;
+  projectType: ProjectType; // @deprecated
+  frontendFramework: FrontendFramework;
   backendFramework: BackendFramework;
+  techStackConfig?: TechStackConfig;
   path: string;
   description?: string;
   createdAt: Date;
@@ -38,7 +51,8 @@ export interface Project {
 
 export interface CreateProjectInput {
   name: string;
-  projectType: ProjectType;
+  appType: AppType;
+  frontendFramework?: FrontendFramework;
   backendFramework?: BackendFramework;
   description?: string;
 }
@@ -46,7 +60,8 @@ export interface CreateProjectInput {
 export interface ProjectListItem {
   id: string;
   name: string;
-  projectType: ProjectType;
+  appType: AppType;
+  frontendFramework: FrontendFramework;
   backendFramework: BackendFramework;
   databaseProvider?: DatabaseProvider | null;
   updatedAt: Date;

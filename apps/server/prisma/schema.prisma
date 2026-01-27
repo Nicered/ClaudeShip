@@ -8,11 +8,14 @@ datasource db {
 }
 
 model Project {
-  id               String            @id @default(uuid())
-  name             String
-  projectType      ProjectType
-  backendFramework BackendFramework  @default(NONE)
-  path             String
+  id                String            @id @default(uuid())
+  name              String
+  appType           AppType           @default(FULLSTACK_WEB)
+  projectType       ProjectType       // @deprecated - kept for migration compatibility
+  frontendFramework FrontendFramework @default(REACT_VITE)
+  backendFramework  BackendFramework  @default(EXPRESS)
+  techStackConfig   String?           @default("{}")
+  path              String
   description      String?
   claudeSessionId  String?           // Claude Code CLI session ID for conversation continuity
 
@@ -42,15 +45,40 @@ model Message {
   @@map("messages")
 }
 
+enum AppType {
+  FULLSTACK_WEB   // Frontend + Backend
+  FRONTEND_ONLY   // Static site / SPA
+  API_ONLY        // Backend only
+  MOBILE          // Mobile app only
+  MOBILE_WITH_API // Mobile app + Backend
+}
+
+// @deprecated Use AppType instead
 enum ProjectType {
   WEB
   NATIVE
+}
+
+enum FrontendFramework {
+  // Web
+  REACT_VITE    // React + Vite (default)
+  NEXTJS        // Next.js
+  VUE           // Vue 3 + Vite
+  SVELTE        // SvelteKit
+  // Mobile
+  REACT_NATIVE  // React Native
+  FLUTTER       // Flutter (Dart)
+  EXPO          // Expo (React Native based)
+  // None
+  NONE          // Backend only
 }
 
 enum BackendFramework {
   NONE
   EXPRESS
   FASTAPI
+  DJANGO
+  NESTJS
 }
 
 enum DatabaseProvider {
