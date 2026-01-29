@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.26](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.25...claudeship-v0.2.26) (2026-01-29)
+
+
+### Features
+
+* Add conversational framework selection system ([f9e04f6](https://github.com/Nicered/ClaudeShip/commit/f9e04f65fed08e37d998de8da5e98fc84702b9b3))
+
+
+### Bug Fixes
+
+* Update server DTO and service to match new appType schema ([c463920](https://github.com/Nicered/ClaudeShip/commit/c4639201756c1eb2341fc6f55f73b815e848f5a2))
+
 ## [0.2.25](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.24...claudeship-v0.2.25) (2026-01-27)
 
 
