@@ -71,11 +71,19 @@ export class ProjectService {
       await fs.mkdir(path.join(projectPath, "backend"), { recursive: true });
     }
 
+    // Derive deprecated projectType from appType
+    const projectType =
+      dto.appType === "MOBILE" || dto.appType === "MOBILE_WITH_API"
+        ? "NATIVE" as const
+        : "WEB" as const;
+
     // Create project in database first (to get ID)
     const project = await this.prisma.project.create({
       data: {
         name: dto.name,
-        projectType: dto.projectType,
+        appType: dto.appType,
+        projectType,
+        frontendFramework: dto.frontendFramework || "NONE",
         backendFramework: dto.backendFramework || "NONE",
         path: projectPath,
         description: dto.description,

@@ -1,8 +1,13 @@
-import { ProjectType, BackendFramework } from "@prisma/client";
+import {
+  AppType,
+  FrontendFramework,
+  BackendFramework,
+} from "@prisma/client";
 
 export class CreateProjectDto {
   name: string;
-  projectType: ProjectType;
+  appType: AppType;
+  frontendFramework?: FrontendFramework;
   backendFramework?: BackendFramework;
   description?: string;
 }
