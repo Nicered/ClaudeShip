@@ -37,6 +37,9 @@ export interface ClaudeStreamEvent {
 // Ask mode: read-only tools only
 const ASK_MODE_TOOLS = ["Read", "Glob", "Grep", "LSP", "WebFetch", "WebSearch"];
 
+// All tools to allow when running as root (--dangerously-skip-permissions is rejected by root)
+const ROOT_ALLOWED_TOOLS = ["Bash", "Write", "Edit", "NotebookEdit", "Read", "Glob", "Grep", "WebFetch", "WebSearch", "TodoWrite", "Task"];
+
 @Injectable()
 export class ClaudeCliService {
   private readonly logger = new Logger(ClaudeCliService.name);
@@ -76,9 +79,11 @@ export class ClaudeCliService {
       // Build CLI command with optional resume flag and mode-specific tools
       const resumeFlag = resumeSessionId ? `--resume "${resumeSessionId}"` : "";
       const toolsFlag = mode === "ask" ? `--tools "${ASK_MODE_TOOLS.join(",")}"` : "";
-      // Root cannot use --dangerously-skip-permissions; use --permission-mode dontAsk instead
+      // Root cannot use --dangerously-skip-permissions; use acceptEdits + allowedTools instead
       const isRoot = process.getuid?.() === 0;
-      const permissionsFlag = isRoot ? "--permission-mode dontAsk" : "--dangerously-skip-permissions";
+      const permissionsFlag = isRoot
+        ? `--permission-mode acceptEdits --allowedTools "${ROOT_ALLOWED_TOOLS.join(",")}"`
+        : "--dangerously-skip-permissions";
       const cliCommand = `${this.cliPath} -p "$(cat '${tempFile}')" ${resumeFlag} ${toolsFlag} --output-format stream-json --verbose ${permissionsFlag}`;
       const command = `script -q -c '${cliCommand}' /dev/null`;
 
