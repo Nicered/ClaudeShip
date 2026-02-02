@@ -5,7 +5,8 @@
  * Finds available ports and starts both frontend and backend servers
  */
 
-const { spawn } = require("child_process");
+const { spawn, execSync } = require("child_process");
+const fs = require("fs");
 const net = require("net");
 const path = require("path");
 
@@ -64,6 +65,14 @@ function startProcess(name, command, args, env, cwd) {
 }
 
 async function main() {
+  // Auto-build server if dist doesn't exist
+  const serverDistMain = path.join(ROOT_DIR, "apps/server/dist/apps/server/src/main.js");
+  if (!fs.existsSync(serverDistMain)) {
+    console.log("Server dist not found, building...\n");
+    execSync("pnpm --filter @claudeship/server build", { cwd: ROOT_DIR, stdio: "inherit" });
+    console.log("");
+  }
+
   console.log("Finding available ports...\n");
 
   // Find available ports (prefer 14000/13000, but use alternatives if busy)
