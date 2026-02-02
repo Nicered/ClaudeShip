@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.28](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.27...claudeship-v0.2.28) (2026-02-02)
+
+
+### Features
+
+* Add architect agent for automated code review ([286dc7b](https://github.com/Nicered/ClaudeShip/commit/286dc7b4c75d055bbc16f28191ef4ee6a5964fa1))
+* Add architect agent for automated code review after build ([3d9fd4f](https://github.com/Nicered/ClaudeShip/commit/3d9fd4f22c91c9572b1448ffec0483c400c87289)), closes [#68](https://github.com/Nicered/ClaudeShip/issues/68)
+
 ## [0.2.27](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.26...claudeship-v0.2.27) (2026-02-02)
 
 
