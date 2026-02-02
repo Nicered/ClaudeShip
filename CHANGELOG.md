@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.35](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.34...claudeship-v0.2.35) (2026-02-02)
+
+
+### Features
+
+* integrate disconnected features & refactor DatabaseService ([e1c18e2](https://github.com/Nicered/ClaudeShip/commit/e1c18e2f646e0e35594db3c95c50b14e1caf60df))
+* integrate disconnected features across architect, checkpoint, and workspace ([40808b0](https://github.com/Nicered/ClaudeShip/commit/40808b07cd3b5e3d161989db360b010d2ba95dbc))
+* refactor DatabaseService to adapter pattern with SQLite/PostgreSQL support ([8df12b1](https://github.com/Nicered/ClaudeShip/commit/8df12b1e2cbb861993dcf9f37de7103c89f37d48))
+
+
+### Bug Fixes
+
+* add .nojekyll to docs for GitHub Pages _next directory serving ([0c1d271](https://github.com/Nicered/ClaudeShip/commit/0c1d271310f67109cd1956aecc51607b8bc9e030))
+
 ## [0.2.34](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.33...claudeship-v0.2.34) (2026-02-02)
 
 
