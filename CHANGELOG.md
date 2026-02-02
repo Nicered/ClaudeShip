@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.31](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.30...claudeship-v0.2.31) (2026-02-02)
+
+
+### Bug Fixes
+
+* Add entryFile to nest-cli.json for correct dist path ([8b97ed6](https://github.com/Nicered/ClaudeShip/commit/8b97ed6842a4ff392f3fe05e299f387249a88123))
+* Add entryFile to nest-cli.json for correct dist path resolution ([87aa8b7](https://github.com/Nicered/ClaudeShip/commit/87aa8b7358810368ef9b2c109481d38296a777ef))
+
 ## [0.2.30](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.29...claudeship-v0.2.30) (2026-02-02)
 
 
