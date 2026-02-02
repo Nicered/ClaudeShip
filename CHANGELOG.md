@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.34](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.33...claudeship-v0.2.34) (2026-02-02)
+
+
+### Features
+
+* Add clipboard image paste support to chat input ([93c1cfe](https://github.com/Nicered/ClaudeShip/commit/93c1cfe9d8368f980d4f426fc9b8413829a9bc18))
+* Add clipboard image paste support to chat input ([f834410](https://github.com/Nicered/ClaudeShip/commit/f834410c52b779c207076028ae57db8074bb6f7b))
+
 ## [0.2.33](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.32...claudeship-v0.2.33) (2026-02-02)
 
 
