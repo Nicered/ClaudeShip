@@ -1,4 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 import { Observable, Subject } from "rxjs";
 import { PrismaService } from "../prisma/prisma.service";
 import { ProjectService } from "../project/project.service";
@@ -50,7 +51,8 @@ export class ChatService {
     private projectService: ProjectService,
     private claudeCliService: ClaudeCliService,
     private frameworkDetector: FrameworkDetectorService,
-    private promptBuilder: PromptBuilderService
+    private promptBuilder: PromptBuilderService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async getMessages(projectId: string, limit = 50, offset = 0) {
@@ -363,6 +365,15 @@ export class ChatService {
                 subscriber.next({
                   data: JSON.stringify(completeEvent),
                 } as MessageEvent);
+              }
+
+              // Emit build.complete event for architect review (build mode only)
+              if (mode === "build" && toolActivities.length > 0) {
+                this.eventEmitter.emit("build.complete", {
+                  projectId,
+                  messageId: fullResponse ? userMessage.id : "",
+                  toolActivities,
+                });
               }
 
               // Clean up

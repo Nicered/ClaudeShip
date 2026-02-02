@@ -9,6 +9,7 @@ import { DatabasePanel } from "@/components/database/DatabasePanel";
 import { TestRunner } from "@/components/testing/TestRunner";
 import { CheckpointPanel } from "@/components/checkpoint/CheckpointPanel";
 import { EnvPanel } from "@/components/env/EnvPanel";
+import { ArchitectPanel } from "@/components/architect/ArchitectPanel";
 import {
   FolderTree,
   X,
@@ -17,6 +18,7 @@ import {
   FlaskConical,
   GitBranch,
   Settings2,
+  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
@@ -31,12 +33,13 @@ interface SelectedFile {
   extension: string;
 }
 
-type RightPanelTab = "preview" | "database" | "testing" | "checkpoint" | "env";
+type RightPanelTab = "preview" | "database" | "testing" | "checkpoint" | "env" | "review";
 
 const tabConfig: { id: RightPanelTab; icon: React.ReactNode; label: string }[] = [
   { id: "preview", icon: <Eye className="h-4 w-4" />, label: "Preview" },
   { id: "database", icon: <Database className="h-4 w-4" />, label: "Database" },
   { id: "testing", icon: <FlaskConical className="h-4 w-4" />, label: "Testing" },
+  { id: "review", icon: <Search className="h-4 w-4" />, label: "Review" },
   { id: "checkpoint", icon: <GitBranch className="h-4 w-4" />, label: "Checkpoint" },
   { id: "env", icon: <Settings2 className="h-4 w-4" />, label: "Env" },
 ];
@@ -68,6 +71,8 @@ export function WorkspaceLayout({ projectId }: WorkspaceLayoutProps) {
         return <CheckpointPanel projectId={projectId} />;
       case "env":
         return <EnvPanel projectId={projectId} />;
+      case "review":
+        return <ArchitectPanel projectId={projectId} />;
       default:
         return <PreviewPanel projectId={projectId} />;
     }

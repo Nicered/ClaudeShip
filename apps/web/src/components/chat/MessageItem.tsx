@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import type { ChatMessage, Role } from "@claudeship/shared";
+import type { ChatMessage } from "@claudeship/shared";
 import {
   FileText,
   FolderSearch,
@@ -51,21 +51,70 @@ const toolDisplayNames: Record<string, string> = {
   TodoWrite: "작업 목록",
 };
 
+function ReviewSummaryMessage({ message, metadata }: { message: ChatMessage; metadata: Record<string, unknown> }) {
+  const score = metadata.overallScore as number;
+  const issueCount = (metadata.issueCount as number) || 0;
+  const criticalCount = (metadata.criticalCount as number) || 0;
+  const highCount = (metadata.highCount as number) || 0;
+
+  let scoreColor = "text-green-600 bg-green-100";
+  if (score < 50) scoreColor = "text-red-600 bg-red-100";
+  else if (score < 70) scoreColor = "text-yellow-600 bg-yellow-100";
+  else if (score < 90) scoreColor = "text-blue-600 bg-blue-100";
+
+  return (
+    <div className="flex gap-3 p-4 rounded-lg bg-muted/30 border border-dashed">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-600 text-sm font-medium">
+        <Search className="h-4 w-4" />
+      </div>
+      <div className="flex-1 space-y-2">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-medium text-violet-600 uppercase">Code Review</span>
+          <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-xs font-bold", scoreColor)}>
+            {score}/100
+          </span>
+          {issueCount > 0 && (
+            <span className="text-xs text-muted-foreground">
+              {issueCount} issue{issueCount !== 1 ? "s" : ""}
+              {criticalCount > 0 && <span className="text-red-600 font-medium"> ({criticalCount} critical)</span>}
+              {highCount > 0 && <span className="text-orange-600 font-medium"> ({highCount} high)</span>}
+            </span>
+          )}
+        </div>
+        <p className="text-sm text-muted-foreground">{message.content.split("\n")[0].replace(/^Code Review Complete - Score: \d+\/100\n?/, "")}</p>
+      </div>
+    </div>
+  );
+}
+
 export function MessageItem({ message }: MessageItemProps) {
   const isUser = message.role === "USER";
+  const isSystem = message.role === "SYSTEM";
 
-  // Parse metadata for tool activities
+  // Parse metadata
   let toolActivities: ToolActivity[] = [];
-  if (!isUser && message.metadata) {
+  let parsedMetadata: Record<string, unknown> = {};
+  if (message.metadata) {
     try {
-      // Handle both string (from DB) and object (parsed) metadata
-      const metadata = typeof message.metadata === "string"
+      parsedMetadata = typeof message.metadata === "string"
         ? JSON.parse(message.metadata)
-        : message.metadata;
-      toolActivities = metadata.toolActivities || [];
+        : (message.metadata as Record<string, unknown>);
+      if (!isUser) {
+        toolActivities = (parsedMetadata.toolActivities as ToolActivity[]) || [];
+      }
     } catch {
       // Ignore parse errors
     }
+  }
+
+  // Render review summary system messages with special UI
+  if (isSystem && parsedMetadata.type === "review_summary") {
+    return <ReviewSummaryMessage message={message} metadata={parsedMetadata} />;
+  }
+
+  // Skip other system messages from rendering
+  if (isSystem) {
+    return null;
   }
 
   return (

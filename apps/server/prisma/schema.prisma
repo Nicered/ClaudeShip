@@ -28,6 +28,7 @@ model Project {
   updatedAt DateTime @updatedAt
 
   messages Message[]
+  reviews  Review[]
 
   @@map("projects")
 }
@@ -90,6 +91,32 @@ enum Role {
   USER
   ASSISTANT
   SYSTEM
+}
+
+enum ReviewStatus {
+  RUNNING
+  COMPLETED
+  FAILED
+  AUTO_FIXING
+}
+
+model Review {
+  id               String       @id @default(uuid())
+  projectId        String
+  status           ReviewStatus @default(RUNNING)
+  summary          String?
+  overallScore     Int?
+  issues           String?      @default("[]")  // JSON array of ReviewIssue
+  strengths        String?      @default("[]")  // JSON array of strings
+  recommendations  String?      @default("[]")  // JSON array of strings
+  cost             Float?
+  triggerMessageId String?
+  createdAt        DateTime     @default(now())
+  completedAt      DateTime?
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
 }
 
 model Setting {
