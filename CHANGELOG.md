@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.32](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.31...claudeship-v0.2.32) (2026-02-02)
+
+
+### Bug Fixes
+
+* Use acceptEdits with allowedTools for root permission bypass ([0fa663f](https://github.com/Nicered/ClaudeShip/commit/0fa663f67c38f2355020295eda9c0098ac573c46))
+* Use acceptEdits with allowedTools for root permission bypass ([9162a8f](https://github.com/Nicered/ClaudeShip/commit/9162a8fa0430b41c127464c312105e90ba3388d2))
+
 ## [0.2.31](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.30...claudeship-v0.2.31) (2026-02-02)
 
 

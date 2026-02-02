@@ -1,6 +1,6 @@
 {
   "name": "claudeship",
-  "version": "0.2.31",
+  "version": "0.2.32",
   "description": "AI-Powered App Builder using Claude Code CLI",
   "bin": {
     "claudeship": "./bin/claudeship.js"
