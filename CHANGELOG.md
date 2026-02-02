@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.27](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.26...claudeship-v0.2.27) (2026-02-02)
+
+
+### Bug Fixes
+
+* Isolate chat store state per project ([#65](https://github.com/Nicered/ClaudeShip/issues/65)) ([d07b4f4](https://github.com/Nicered/ClaudeShip/commit/d07b4f4a59dcb4a9b28e970cb6316d2697688e05))
+* Isolate chat store state per project to prevent cross-project context leaking ([a0208f7](https://github.com/Nicered/ClaudeShip/commit/a0208f7a11614b6cc62d5107ed422bbaea31e8ab))
+
 ## [0.2.26](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.25...claudeship-v0.2.26) (2026-01-29)
 
 
