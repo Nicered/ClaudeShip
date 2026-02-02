@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { PrismaModule } from "./prisma/prisma.module";
@@ -13,12 +14,14 @@ import { TestingModule } from "./testing/testing.module";
 import { CheckpointModule } from "./checkpoint/checkpoint.module";
 import { ProjectContextModule } from "./project-context/project-context.module";
 import { EnvModule } from "./env/env.module";
+import { ArchitectModule } from "./architect/architect.module";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    EventEmitterModule.forRoot(),
     PrismaModule,
     ProjectModule,
     ChatModule,
@@ -30,6 +33,7 @@ import { EnvModule } from "./env/env.module";
     CheckpointModule,
     ProjectContextModule,
     EnvModule,
+    ArchitectModule,
   ],
   controllers: [AppController],
   providers: [AppService],
