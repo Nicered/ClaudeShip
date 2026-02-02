@@ -654,17 +654,17 @@ export class PreviewService implements OnModuleDestroy {
 
     this.logger.log(`Stopping preview for project ${projectId}`);
 
-    // Stop frontend process
-    if (preview.process) {
-      preview.process.kill("SIGTERM");
-    }
-
-    // Stop backend process (for fullstack projects)
-    if (preview.backendProcess) {
-      preview.backendProcess.kill("SIGTERM");
-    }
-
     this.previews.delete(projectId);
+
+    const killPromises: Promise<void>[] = [];
+    if (preview.process) killPromises.push(this.killProcess(preview.process));
+    if (preview.backendProcess) killPromises.push(this.killProcess(preview.backendProcess));
+    await Promise.all(killPromises);
+
+    // Wait for ports to actually be released
+    const portsToWait = [preview.port];
+    if (preview.backendPort) portsToWait.push(preview.backendPort);
+    await this.waitForPortsRelease(portsToWait);
 
     return { status: "stopped" };
   }
@@ -672,13 +672,7 @@ export class PreviewService implements OnModuleDestroy {
   async restart(projectId: string): Promise<PreviewStatus> {
     this.logger.log(`Restarting preview for project ${projectId}`);
 
-    // Stop existing preview
     await this.stop(projectId);
-
-    // Wait a moment for ports to be released
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // Start again
     return this.start(projectId);
   }
 
@@ -694,14 +688,13 @@ export class PreviewService implements OnModuleDestroy {
     }
     this.pendingStops.clear();
 
-    for (const [projectId, preview] of this.previews) {
-      if (preview.process) {
-        preview.process.kill("SIGTERM");
-      }
-      if (preview.backendProcess) {
-        preview.backendProcess.kill("SIGTERM");
-      }
+    const killPromises: Promise<void>[] = [];
+    for (const preview of this.previews.values()) {
+      if (preview.process) killPromises.push(this.killProcess(preview.process));
+      if (preview.backendProcess) killPromises.push(this.killProcess(preview.backendProcess));
     }
+    await Promise.all(killPromises);
+
     this.previews.clear();
     this.activeConnections.clear();
   }
@@ -759,6 +752,54 @@ export class PreviewService implements OnModuleDestroy {
    */
   getConnectionCount(projectId: string): number {
     return this.activeConnections.get(projectId) || 0;
+  }
+
+  private killProcess(proc: ChildProcess): Promise<void> {
+    return new Promise((resolve) => {
+      if (!proc || proc.killed) {
+        resolve();
+        return;
+      }
+
+      const onClose = () => {
+        clearTimeout(forceKillTimer);
+        resolve();
+      };
+      proc.once("close", onClose);
+
+      try {
+        proc.kill("SIGTERM");
+      } catch {
+        // Process already dead
+        proc.removeListener("close", onClose);
+        resolve();
+        return;
+      }
+
+      // Force kill after 5 seconds if SIGTERM didn't work
+      const forceKillTimer = setTimeout(() => {
+        try {
+          proc.kill("SIGKILL");
+        } catch {
+          // already dead
+        }
+        proc.removeListener("close", onClose);
+        resolve();
+      }, 5000);
+    });
+  }
+
+  private async waitForPortsRelease(
+    ports: number[],
+    timeout = 10000
+  ): Promise<void> {
+    const start = Date.now();
+    for (const port of ports) {
+      while (Date.now() - start < timeout) {
+        if (await this.isPortAvailable(port)) break;
+        await new Promise((r) => setTimeout(r, 300));
+      }
+    }
   }
 
   private async findAvailablePort(exclude: number[] = []): Promise<number> {
