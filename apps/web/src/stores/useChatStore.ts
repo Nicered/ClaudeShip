@@ -47,6 +47,7 @@ interface ActiveSessionStatus {
 }
 
 interface ChatState {
+  currentProjectId: string | null;
   messages: ChatMessage[];
   isStreaming: boolean;
   streamingBlocks: StreamingBlock[];
@@ -58,6 +59,7 @@ interface ChatState {
   attachedFiles: AttachedFile[];
   isUploading: boolean;
 
+  initForProject: (projectId: string) => void;
   fetchMessages: (projectId: string) => Promise<void>;
   fetchActiveSession: (projectId: string) => Promise<void>;
   sendMessage: (projectId: string, content: string, fromQueue?: boolean) => Promise<void>;
@@ -76,6 +78,7 @@ interface ChatState {
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
+  currentProjectId: null,
   messages: [],
   isStreaming: false,
   streamingBlocks: [],
@@ -86,6 +89,27 @@ export const useChatStore = create<ChatState>((set, get) => ({
   pendingQuestion: null,
   attachedFiles: [],
   isUploading: false,
+
+  initForProject: (projectId: string) => {
+    const files = get().attachedFiles;
+    files.forEach((f) => {
+      if (f.preview) URL.revokeObjectURL(f.preview);
+    });
+
+    set({
+      currentProjectId: projectId,
+      messages: [],
+      streamingBlocks: [],
+      isStreaming: false,
+      error: null,
+      messageQueue: [],
+      isProcessingQueue: false,
+      pendingQuestion: null,
+      attachedFiles: [],
+      isUploading: false,
+      // mode is intentionally preserved (user preference)
+    });
+  },
 
   setMode: (mode: ChatMode) => set({ mode }),
 
@@ -184,8 +208,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
       const messages = await api.get<ChatMessage[]>(
         `/projects/${projectId}/messages`
       );
+      if (get().currentProjectId !== projectId) return;
       set({ messages, error: null });
     } catch (error) {
+      if (get().currentProjectId !== projectId) return;
       set({
         error:
           error instanceof Error ? error.message : "Failed to fetch messages",
@@ -198,6 +224,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
       const status = await api.get<ActiveSessionStatus>(
         `/projects/${projectId}/chat/status`
       );
+
+      if (get().currentProjectId !== projectId) return;
 
       const currentState = get();
 
@@ -230,6 +258,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
           const processStream = async () => {
             try {
               while (true) {
+                // Stale project check - cancel stream if project changed
+                if (get().currentProjectId !== projectId) {
+                  await reader.cancel();
+                  break;
+                }
+
                 const { done, value } = await reader.read();
                 if (done) break;
 
@@ -246,6 +280,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
                       if (data.type === "no_active_session") {
                         // No active session, just finish
                         break;
+                      }
+
+                      if (get().currentProjectId !== projectId) {
+                        await reader.cancel();
+                        return;
                       }
 
                       if (data.type === "text" && data.content) {
@@ -300,9 +339,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
                 }
               }
             } finally {
-              // Refresh messages after streaming completes
-              await get().fetchMessages(projectId);
-              set({ isStreaming: false });
+              if (get().currentProjectId === projectId) {
+                // Refresh messages after streaming completes
+                await get().fetchMessages(projectId);
+                set({ isStreaming: false });
+              }
             }
           };
 
@@ -459,6 +500,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
       let buffer = "";
 
       while (true) {
+        // Stale project check - cancel stream if project changed
+        if (get().currentProjectId !== projectId) {
+          await reader.cancel();
+          break;
+        }
+
         const { done, value } = await reader.read();
         if (done) break;
 
@@ -471,6 +518,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
             try {
               const data = JSON.parse(line.slice(6));
               console.log("[SSE Event]", data.type, data);
+
+              if (get().currentProjectId !== projectId) {
+                await reader.cancel();
+                return;
+              }
 
               if (data.type === "text" && data.content) {
                 // Check for restart-preview marker
@@ -560,20 +612,26 @@ export const useChatStore = create<ChatState>((set, get) => ({
       }
 
       // Refresh messages after streaming completes
-      await get().fetchMessages(projectId);
+      if (get().currentProjectId === projectId) {
+        await get().fetchMessages(projectId);
+      }
     } catch (error) {
-      set({
-        error:
-          error instanceof Error ? error.message : "Failed to send message",
-      });
+      if (get().currentProjectId === projectId) {
+        set({
+          error:
+            error instanceof Error ? error.message : "Failed to send message",
+        });
+      }
     } finally {
-      // Keep streamingBlocks visible, only mark streaming as done
-      set({ isStreaming: false });
+      if (get().currentProjectId === projectId) {
+        // Keep streamingBlocks visible, only mark streaming as done
+        set({ isStreaming: false });
 
-      // Process next message in queue if any
-      if (get().messageQueue.length > 0) {
-        // Use setTimeout to avoid blocking
-        setTimeout(() => get().processQueue(projectId), 100);
+        // Process next message in queue if any
+        if (get().messageQueue.length > 0) {
+          // Use setTimeout to avoid blocking
+          setTimeout(() => get().processQueue(projectId), 100);
+        }
       }
     }
   },
