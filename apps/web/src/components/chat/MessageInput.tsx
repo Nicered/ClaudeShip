@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, KeyboardEvent, DragEvent, ChangeEvent } from "react";
+import { useState, useRef, KeyboardEvent, DragEvent, ChangeEvent, ClipboardEvent } from "react";
 import { Send, Clock, Paperclip } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
@@ -113,6 +113,28 @@ export function MessageInput({ onSend, projectId, disabled, isStreaming, queueCo
     }
   };
 
+  const handlePaste = (e: ClipboardEvent<HTMLTextAreaElement>) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    const imageFiles: File[] = [];
+    for (const item of Array.from(items)) {
+      if (item.type.startsWith("image/")) {
+        const file = item.getAsFile();
+        if (file) {
+          const ext = file.type.split("/")[1] || "png";
+          const named = new File([file], `clipboard-${Date.now()}.${ext}`, { type: file.type });
+          imageFiles.push(named);
+        }
+      }
+    }
+
+    if (imageFiles.length > 0) {
+      e.preventDefault();
+      handleFilesSelected(imageFiles);
+    }
+  };
+
   const handleInput = () => {
     const textarea = textareaRef.current;
     if (textarea) {
@@ -157,6 +179,7 @@ export function MessageInput({ onSend, projectId, disabled, isStreaming, queueCo
             value={content}
             onChange={(e) => setContent(e.target.value)}
             onKeyDown={handleKeyDown}
+            onPaste={handlePaste}
             onInput={handleInput}
             placeholder={getPlaceholder()}
             disabled={disabled}
