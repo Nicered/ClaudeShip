@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.30](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.29...claudeship-v0.2.30) (2026-02-02)
+
+
+### Bug Fixes
+
+* Use --permission-mode dontAsk for root to bypass all tool permissions ([b276554](https://github.com/Nicered/ClaudeShip/commit/b276554170b367b7e26b91fd293fe8035ed2f55a))
+* Use --permission-mode dontAsk for root to bypass all tool permissions ([98ecc8e](https://github.com/Nicered/ClaudeShip/commit/98ecc8edae90023e413068ef07e2c400aaa82092))
+
 ## [0.2.29](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.28...claudeship-v0.2.29) (2026-02-02)
 
 
