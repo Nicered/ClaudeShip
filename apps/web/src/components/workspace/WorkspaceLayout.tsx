@@ -10,6 +10,7 @@ import { TestRunner } from "@/components/testing/TestRunner";
 import { CheckpointPanel } from "@/components/checkpoint/CheckpointPanel";
 import { EnvPanel } from "@/components/env/EnvPanel";
 import { ArchitectPanel } from "@/components/architect/ArchitectPanel";
+import { ProjectContextPanel } from "@/components/project-context/ProjectContextPanel";
 import {
   FolderTree,
   X,
@@ -19,6 +20,7 @@ import {
   GitBranch,
   Settings2,
   Search,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
@@ -33,7 +35,7 @@ interface SelectedFile {
   extension: string;
 }
 
-type RightPanelTab = "preview" | "database" | "testing" | "checkpoint" | "env" | "review";
+type RightPanelTab = "preview" | "database" | "testing" | "checkpoint" | "env" | "review" | "context";
 
 const tabConfig: { id: RightPanelTab; icon: React.ReactNode; label: string }[] = [
   { id: "preview", icon: <Eye className="h-4 w-4" />, label: "Preview" },
@@ -42,6 +44,7 @@ const tabConfig: { id: RightPanelTab; icon: React.ReactNode; label: string }[] =
   { id: "review", icon: <Search className="h-4 w-4" />, label: "Review" },
   { id: "checkpoint", icon: <GitBranch className="h-4 w-4" />, label: "Checkpoint" },
   { id: "env", icon: <Settings2 className="h-4 w-4" />, label: "Env" },
+  { id: "context", icon: <FileText className="h-4 w-4" />, label: "Context" },
 ];
 
 export function WorkspaceLayout({ projectId }: WorkspaceLayoutProps) {
@@ -73,6 +76,8 @@ export function WorkspaceLayout({ projectId }: WorkspaceLayoutProps) {
         return <EnvPanel projectId={projectId} />;
       case "review":
         return <ArchitectPanel projectId={projectId} />;
+      case "context":
+        return <ProjectContextPanel projectId={projectId} />;
       default:
         return <PreviewPanel projectId={projectId} />;
     }

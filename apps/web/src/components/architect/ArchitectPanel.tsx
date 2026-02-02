@@ -58,6 +58,7 @@ export function ArchitectPanel({ projectId }: ArchitectPanelProps) {
     reviews,
     activeReview,
     isReviewing,
+    isAutoFixing,
     error,
     fetchReviews,
     fetchReview,
@@ -106,7 +107,16 @@ export function ArchitectPanel({ projectId }: ArchitectPanelProps) {
   const severityOrder = ["critical", "high", "medium", "low"];
 
   return (
-    <div className="flex h-full">
+    <div className="flex flex-col h-full">
+      {/* Auto-fix banner */}
+      {isAutoFixing && (
+        <div className="flex items-center gap-2 px-4 py-2 bg-purple-100 border-b border-purple-200 text-sm text-purple-700">
+          <Sparkles className="h-4 w-4 animate-pulse" />
+          Auto-fixing critical issues...
+        </div>
+      )}
+
+      <div className="flex flex-1 min-h-0">
       {/* Left sidebar - review list */}
       <div className="w-56 border-r flex flex-col flex-shrink-0">
         <div className="p-3 border-b flex items-center justify-between">
@@ -294,6 +304,7 @@ export function ArchitectPanel({ projectId }: ArchitectPanelProps) {
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

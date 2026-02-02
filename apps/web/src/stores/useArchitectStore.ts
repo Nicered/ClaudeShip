@@ -9,6 +9,7 @@ interface ArchitectState {
   reviews: Review[];
   activeReview: Review | null;
   isReviewing: boolean;
+  isAutoFixing: boolean;
   error: string | null;
   currentProjectId: string | null;
 
@@ -23,6 +24,7 @@ export const useArchitectStore = create<ArchitectState>((set, get) => ({
   reviews: [],
   activeReview: null,
   isReviewing: false,
+  isAutoFixing: false,
   error: null,
   currentProjectId: null,
 
@@ -76,17 +78,34 @@ export const useArchitectStore = create<ArchitectState>((set, get) => ({
       try {
         const data = JSON.parse(event.data);
 
+        const isAutoFix = data.data?.autoFix === true;
+
         if (data.type === "start") {
-          set({ isReviewing: true });
+          if (isAutoFix) {
+            set({ isAutoFixing: true });
+          } else {
+            set({ isReviewing: true });
+          }
         } else if (data.type === "complete") {
-          set({ isReviewing: false });
+          if (isAutoFix) {
+            set({ isAutoFixing: false });
+          } else {
+            set({ isReviewing: false });
+          }
           // Refresh reviews list
           get().fetchReviews(projectId);
         } else if (data.type === "error") {
-          set({
-            isReviewing: false,
-            error: data.data?.error || "Review failed",
-          });
+          if (isAutoFix) {
+            set({
+              isAutoFixing: false,
+              error: data.data?.error || "Auto-fix failed",
+            });
+          } else {
+            set({
+              isReviewing: false,
+              error: data.data?.error || "Review failed",
+            });
+          }
         }
       } catch {
         // Ignore parse errors
