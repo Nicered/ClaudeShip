@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.33](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.32...claudeship-v0.2.33) (2026-02-02)
+
+
+### Bug Fixes
+
+* Auto-build server on pnpm dev if dist is missing ([696961e](https://github.com/Nicered/ClaudeShip/commit/696961ef06bdc33fdc07b093771ba7330d97c78d))
+* Auto-build server on pnpm dev if dist is missing ([9669ee1](https://github.com/Nicered/ClaudeShip/commit/9669ee1637a5e37a00bd4aaac09657555352a92d))
+
 ## [0.2.32](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.31...claudeship-v0.2.32) (2026-02-02)
 
 
