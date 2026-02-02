@@ -21,18 +21,18 @@ export function ChatPanel({ projectId }: ChatPanelProps) {
     isStreaming,
     streamingBlocks,
     messageQueue,
+    initForProject,
     fetchMessages,
     fetchActiveSession,
     sendMessage,
-    clearMessages,
   } = useChatStore();
 
   useEffect(() => {
-    clearMessages();
+    initForProject(projectId);
     fetchMessages(projectId);
     // Check for active session on mount
     fetchActiveSession(projectId);
-  }, [projectId, fetchMessages, fetchActiveSession, clearMessages]);
+  }, [projectId, initForProject, fetchMessages, fetchActiveSession]);
 
   // Note: We don't poll during streaming because the SSE stream is the source of truth.
   // fetchActiveSession is only called on mount (above) for page refresh recovery.
