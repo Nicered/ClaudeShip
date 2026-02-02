@@ -76,9 +76,9 @@ export class ClaudeCliService {
       // Build CLI command with optional resume flag and mode-specific tools
       const resumeFlag = resumeSessionId ? `--resume "${resumeSessionId}"` : "";
       const toolsFlag = mode === "ask" ? `--tools "${ASK_MODE_TOOLS.join(",")}"` : "";
-      // Skip --dangerously-skip-permissions when running as root (not allowed for security)
+      // Root cannot use --dangerously-skip-permissions; use --permission-mode acceptEdits instead
       const isRoot = process.getuid?.() === 0;
-      const permissionsFlag = isRoot ? "" : "--dangerously-skip-permissions";
+      const permissionsFlag = isRoot ? "--permission-mode acceptEdits" : "--dangerously-skip-permissions";
       const cliCommand = `${this.cliPath} -p "$(cat '${tempFile}')" ${resumeFlag} ${toolsFlag} --output-format stream-json --verbose ${permissionsFlag}`;
       const command = `script -q -c '${cliCommand}' /dev/null`;
 
