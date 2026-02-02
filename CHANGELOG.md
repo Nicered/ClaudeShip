@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.29](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.28...claudeship-v0.2.29) (2026-02-02)
+
+
+### Bug Fixes
+
+* Use --permission-mode acceptEdits for root environment ([2222944](https://github.com/Nicered/ClaudeShip/commit/222294408edc3b77071957a52f1eed6d436c90b5))
+* Use --permission-mode acceptEdits for root instead of skipping permissions ([3995fbd](https://github.com/Nicered/ClaudeShip/commit/3995fbd2ef8d1318eb93900f573adfe71ab45553)), closes [#71](https://github.com/Nicered/ClaudeShip/issues/71)
+
 ## [0.2.28](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.27...claudeship-v0.2.28) (2026-02-02)
 
 
