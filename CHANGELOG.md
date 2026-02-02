@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.36](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.35...claudeship-v0.2.36) (2026-02-02)
+
+
+### Bug Fixes
+
+* await process kill and port release before preview restart ([4e8ab3f](https://github.com/Nicered/ClaudeShip/commit/4e8ab3f92bc24e9c39ddaa6b560c053958f3fec0)), closes [#86](https://github.com/Nicered/ClaudeShip/issues/86)
+
 ## [0.2.35](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.34...claudeship-v0.2.35) (2026-02-02)
 
 
