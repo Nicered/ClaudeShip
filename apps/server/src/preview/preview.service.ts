@@ -721,7 +721,6 @@ export class PreviewService implements OnModuleDestroy {
       // Clean up log resources for each project
       this.cleanupLogResources(projectId);
     }
-    await Promise.all(killPromises);
 
     this.previews.clear();
     this.activeConnections.clear();
