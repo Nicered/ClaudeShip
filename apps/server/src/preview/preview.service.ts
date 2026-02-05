@@ -515,7 +515,11 @@ export class PreviewService implements OnModuleDestroy {
       env: {
         ...process.env,
         PORT: String(port),
+        // For Next.js projects
         NEXT_PUBLIC_API_URL: `http://localhost:${backendPort}`,
+        // For Vite projects
+        VITE_API_URL: `http://localhost:${backendPort}`,
+        VITE_BACKEND_URL: `http://localhost:${backendPort}`,
       },
     });
 
@@ -666,7 +670,26 @@ export class PreviewService implements OnModuleDestroy {
 
     this.previews.delete(projectId);
 
+    // Clean up log streaming resources
+    this.cleanupLogResources(projectId);
+
     return { status: "stopped" };
+  }
+
+  /**
+   * Clean up log streaming resources for a project
+   */
+  private cleanupLogResources(projectId: string): void {
+    // Complete and remove the log subject
+    const subject = this.logSubjects.get(projectId);
+    if (subject) {
+      subject.complete();
+      this.logSubjects.delete(projectId);
+      this.logger.debug(`Cleaned up log subject for ${projectId}`);
+    }
+
+    // Clear log buffer
+    this.logBuffers.delete(projectId);
   }
 
   async restart(projectId: string): Promise<PreviewStatus> {
@@ -701,9 +724,19 @@ export class PreviewService implements OnModuleDestroy {
       if (preview.backendProcess) {
         preview.backendProcess.kill("SIGTERM");
       }
+      // Clean up log resources for each project
+      this.cleanupLogResources(projectId);
     }
     this.previews.clear();
     this.activeConnections.clear();
+
+    // Clean up any remaining log subjects (orphaned)
+    for (const [projectId, subject] of this.logSubjects) {
+      subject.complete();
+      this.logger.debug(`Cleaned up orphaned log subject for ${projectId}`);
+    }
+    this.logSubjects.clear();
+    this.logBuffers.clear();
   }
 
   /**
@@ -777,31 +810,77 @@ export class PreviewService implements OnModuleDestroy {
   private isPortAvailable(port: number): Promise<boolean> {
     return new Promise((resolve) => {
       const server = net.createServer();
-      server.listen(port, () => {
-        server.close(() => resolve(true));
+
+      // Prevent server from keeping process alive during check
+      server.unref();
+
+      const cleanup = () => {
+        server.removeAllListeners();
+      };
+
+      server.once("listening", () => {
+        server.close(() => {
+          cleanup();
+          resolve(true);
+        });
       });
-      server.on("error", () => resolve(false));
+
+      server.once("error", () => {
+        cleanup();
+        resolve(false);
+      });
+
+      server.listen(port);
     });
   }
 
   private waitForServer(port: number, timeout: number): Promise<void> {
     return new Promise((resolve, reject) => {
       const startTime = Date.now();
+      let currentSocket: net.Socket | null = null;
+      let retryTimer: NodeJS.Timeout | null = null;
+      let isResolved = false;
+
+      const cleanup = () => {
+        if (currentSocket) {
+          currentSocket.removeAllListeners();
+          currentSocket.destroy();
+          currentSocket = null;
+        }
+        if (retryTimer) {
+          clearTimeout(retryTimer);
+          retryTimer = null;
+        }
+      };
 
       const check = () => {
-        const socket = new net.Socket();
+        if (isResolved) return;
 
+        cleanup(); // Clean up previous socket if any
+
+        const socket = new net.Socket();
+        currentSocket = socket;
+
+        // Prevent socket from keeping process alive
+        socket.unref();
         socket.setTimeout(1000);
+
         socket.once("connect", () => {
-          socket.destroy();
+          if (isResolved) return;
+          isResolved = true;
+          cleanup();
           resolve();
         });
+
         socket.once("timeout", () => {
-          socket.destroy();
+          if (isResolved) return;
+          cleanup();
           retry();
         });
+
         socket.once("error", () => {
-          socket.destroy();
+          if (isResolved) return;
+          cleanup();
           retry();
         });
 
@@ -809,10 +888,14 @@ export class PreviewService implements OnModuleDestroy {
       };
 
       const retry = () => {
+        if (isResolved) return;
+
         if (Date.now() - startTime > timeout) {
+          isResolved = true;
+          cleanup();
           reject(new Error("Server start timeout"));
         } else {
-          setTimeout(check, 500);
+          retryTimer = setTimeout(check, 500);
         }
       };
 
@@ -862,7 +945,7 @@ export class PreviewService implements OnModuleDestroy {
     message: string
   ): void {
     const entry: LogEntry = {
-      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
       timestamp: Date.now(),
       level,
       source,
