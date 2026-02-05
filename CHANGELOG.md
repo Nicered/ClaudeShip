@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.37](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.36...claudeship-v0.2.37) (2026-02-05)
+
+
+### Bug Fixes
+
+* Resolve connection leak and proxy configuration issues ([44f5993](https://github.com/Nicered/ClaudeShip/commit/44f5993726c4a5c36742ed8241c050cc85c176fa))
+* Resolve connection leak and Vite proxy issues ([3a40883](https://github.com/Nicered/ClaudeShip/commit/3a4088336a2d0d6fcdcb3845f17c6a6b28602fc2))
+
 ## [0.2.36](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.35...claudeship-v0.2.36) (2026-02-02)
 
 
