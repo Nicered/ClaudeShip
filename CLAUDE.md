@@ -18,11 +18,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `scripts/` - 일회성 스크립트
 - `playground/` - 웹 기반 다이어그램 에디터
 
+## 개발 Phase
+
+프로젝트는 Phase 단위로 개발을 진행하며, 설계 문서는 Phase별 폴더로 분리:
+
+| Phase | 설명 | 폴더 |
+|-------|------|------|
+| **Phase 001** | MVP 초기 개발 | `design/phase-001/` |
+| **Phase 002** | 기능 고도화 (체크포인트, DB 뷰어, 아키텍처 리뷰 개선) | `design/phase-002/` |
+
 ## 문서 작성 규칙
 
-- 설계 문서(`design/`): 파일명은 3자리 순서 번호로 시작 (예: `001-research.md`)
-- 사용자 문서(`docs/`): 명확한 주제별 이름 사용 (예: `getting-started.md`, `api-reference.md`)
-- 반드시 LLM이 전역적으로 확인해야하는 문서는 `GLOBAL-`이라는 접두어를 붙임.
+### 설계 문서 (`design/`)
+
+- **Phase별 폴더**: `design/phase-{번호}/`
+- **파일명**: `{순번}-{주제}.md` (3자리 순번)
+  - 예: `design/phase-001/001-research.md`
+  - 예: `design/phase-002/001-checkpoint-research.md`
+- **기능별 분리**: 하나의 문서에 여러 기능을 합치지 않고 기능별로 분리
+- **하위 폴더 금지**: Phase 폴더 내에서는 추가 하위 폴더를 만들지 않음
+
+### 전역 문서
+
+- Phase와 관계없이 전역적으로 참조해야 하는 문서는 `design/GLOBAL-{주제}.md` 형식 사용
+- LLM이 항상 읽어야 하는 문서
+
+### 사용자 문서 (`docs/`)
+
+- 명확한 주제별 이름 사용 (예: `getting-started.md`, `api-reference.md`)
 
 ## 다이어그램 규칙
 
