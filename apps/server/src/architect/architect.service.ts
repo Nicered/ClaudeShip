@@ -268,6 +268,12 @@ export class ArchitectService {
       data: { status: "AUTO_FIXING" },
     });
 
+    this.emitReviewEvent(projectId, {
+      type: "start",
+      reviewId,
+      data: { autoFix: true, issueCount: issues.length },
+    });
+
     const fixPrompt = this.buildAutoFixPrompt(issues);
 
     // Send as a build message through ChatService
@@ -278,9 +284,19 @@ export class ArchitectService {
           where: { id: reviewId },
           data: { status: "COMPLETED" },
         });
+        this.emitReviewEvent(projectId, {
+          type: "complete",
+          reviewId,
+          data: { autoFix: true },
+        });
       },
       error: (err) => {
         this.logger.error(`Auto-fix failed: ${err.message}`);
+        this.emitReviewEvent(projectId, {
+          type: "error",
+          reviewId,
+          data: { autoFix: true, error: err.message },
+        });
       },
     });
   }

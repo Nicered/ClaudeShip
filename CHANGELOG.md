@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.2.36](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.35...claudeship-v0.2.36) (2026-02-02)
+
+
+### Bug Fixes
+
+* await process kill and port release before preview restart ([4e8ab3f](https://github.com/Nicered/ClaudeShip/commit/4e8ab3f92bc24e9c39ddaa6b560c053958f3fec0)), closes [#86](https://github.com/Nicered/ClaudeShip/issues/86)
+
+## [0.2.35](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.34...claudeship-v0.2.35) (2026-02-02)
+
+
+### Features
+
+* integrate disconnected features & refactor DatabaseService ([e1c18e2](https://github.com/Nicered/ClaudeShip/commit/e1c18e2f646e0e35594db3c95c50b14e1caf60df))
+* integrate disconnected features across architect, checkpoint, and workspace ([40808b0](https://github.com/Nicered/ClaudeShip/commit/40808b07cd3b5e3d161989db360b010d2ba95dbc))
+* refactor DatabaseService to adapter pattern with SQLite/PostgreSQL support ([8df12b1](https://github.com/Nicered/ClaudeShip/commit/8df12b1e2cbb861993dcf9f37de7103c89f37d48))
+
+
+### Bug Fixes
+
+* add .nojekyll to docs for GitHub Pages _next directory serving ([0c1d271](https://github.com/Nicered/ClaudeShip/commit/0c1d271310f67109cd1956aecc51607b8bc9e030))
+
+## [0.2.34](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.33...claudeship-v0.2.34) (2026-02-02)
+
+
+### Features
+
+* Add clipboard image paste support to chat input ([93c1cfe](https://github.com/Nicered/ClaudeShip/commit/93c1cfe9d8368f980d4f426fc9b8413829a9bc18))
+* Add clipboard image paste support to chat input ([f834410](https://github.com/Nicered/ClaudeShip/commit/f834410c52b779c207076028ae57db8074bb6f7b))
+
 ## [0.2.33](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.32...claudeship-v0.2.33) (2026-02-02)
 
 

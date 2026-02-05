@@ -1,8 +1,12 @@
 import { Injectable, Logger, NotFoundException, BadRequestException } from "@nestjs/common";
+import { OnEvent } from "@nestjs/event-emitter";
 import { ProjectService } from "../project/project.service";
 import { spawn } from "child_process";
 import * as fs from "fs/promises";
 import * as path from "path";
+
+// Tool names that indicate file modifications
+const FILE_MODIFY_TOOLS = ["Write", "Edit", "MultiEdit"];
 
 export interface Checkpoint {
   id: string;
@@ -32,6 +36,36 @@ export class CheckpointService {
   private readonly logger = new Logger(CheckpointService.name);
 
   constructor(private projectService: ProjectService) {}
+
+  @OnEvent("build.complete")
+  async handleBuildComplete(event: {
+    projectId: string;
+    toolActivities: Array<{ name: string }>;
+  }): Promise<void> {
+    const { projectId, toolActivities } = event;
+
+    const hasFileChanges = toolActivities.some((t) =>
+      FILE_MODIFY_TOOLS.includes(t.name),
+    );
+
+    if (!hasFileChanges) {
+      this.logger.log(
+        `Skipping auto checkpoint for project ${projectId}: no file modifications`,
+      );
+      return;
+    }
+
+    try {
+      const checkpoint = await this.autoCheckpoint(projectId);
+      if (checkpoint) {
+        this.logger.log(
+          `Auto checkpoint created for project ${projectId}: ${checkpoint.id}`,
+        );
+      }
+    } catch (error) {
+      this.logger.error(`Auto checkpoint failed for project ${projectId}: ${error}`);
+    }
+  }
 
   /**
    * Execute git command in project directory

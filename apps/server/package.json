@@ -1,6 +1,6 @@
 {
   "name": "@claudeship/server",
-  "version": "0.2.33",
+  "version": "0.2.36",
   "private": true,
   "scripts": {
     "dev": "nest start --watch",
@@ -23,18 +23,22 @@
     "@nestjs/event-emitter": "^3.0.1",
     "@nestjs/platform-express": "^10.4.0",
     "@prisma/client": "^6.1.0",
+    "better-sqlite3": "^12.6.2",
     "chokidar": "^5.0.0",
     "http-proxy-middleware": "^3.0.3",
     "multer": "^2.0.2",
+    "pg": "^8.18.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.4.0",
     "@nestjs/schematics": "^10.2.0",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/express": "^5.0.0",
     "@types/multer": "^2.0.0",
     "@types/node": "^22.10.0",
+    "@types/pg": "^8.16.0",
     "@typescript-eslint/eslint-plugin": "^8.18.0",
     "@typescript-eslint/parser": "^8.18.0",
     "eslint": "^9.17.0",
