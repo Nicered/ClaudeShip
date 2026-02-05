@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.38](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.37...claudeship-v0.2.38) (2026-02-05)
+
+
+### Bug Fixes
+
+* Remove undefined killPromises variable ([68cd7b1](https://github.com/Nicered/ClaudeShip/commit/68cd7b1f32fea1dd006f08901e1f896d5a50d782))
+* Remove undefined killPromises variable in preview cleanup ([ace0e19](https://github.com/Nicered/ClaudeShip/commit/ace0e19182e3abcd972bd6b65ede6e74ba7a8306))
+
 ## [0.2.37](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.36...claudeship-v0.2.37) (2026-02-05)
 
 
