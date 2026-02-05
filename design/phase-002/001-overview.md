@@ -17,16 +17,39 @@ Phase 001에서 구현된 기능들이 **실제로 동작하지 않거나 불완
 
 ## 2. 현재 상황 분석
 
-### 2.1 구현 현황 요약
+### 2.1 API 테스트 결과 (2025-01-xx)
 
-| 기능 | 백엔드 | 프론트엔드 | 동작 상태 | 문제점 |
-|------|--------|-----------|----------|--------|
-| **Checkpoint** | ✅ 있음 | ✅ 있음 | ⚠️ 미확인 | Git 연동 테스트 필요 |
-| **Architect (Review)** | ✅ 있음 | ✅ 있음 | ⚠️ 미확인 | 자동 트리거 동작 확인 필요 |
-| **Database Viewer** | ✅ 있음 | ✅ 있음 | ⚠️ 미확인 | Prisma 연동 테스트 필요 |
-| **Testing (E2E)** | ✅ 있음 | ✅ 있음 | ⚠️ 미확인 | Playwright 의존성 문제 |
-| **Env Manager** | ✅ 있음 | ✅ 있음 | ⚠️ 미확인 | API 엔드포인트 불일치 가능 |
-| **Project Context** | ✅ 있음 | ❌ 없음 | ❌ 미동작 | UI 없음 |
+| 기능 | 백엔드 | 프론트엔드 | API 상태 | 실사용 상태 | 문제점 |
+|------|--------|-----------|----------|------------|--------|
+| **Checkpoint** | ✅ 있음 | ✅ 있음 | ✅ 응답함 | ❌ 미동작 | 체크포인트 기록이 안됨 |
+| **Architect (Review)** | ✅ 있음 | ✅ 있음 | ✅ 응답함 | ⚠️ 불확실 | 리뷰 결과 반영 확인 필요 |
+| **Database Viewer** | ✅ 있음 | ✅ 있음 | ❌ 500에러 | ❌ 미동작 | DB 없는 프로젝트 에러 처리 미흡 |
+| **Testing (E2E)** | ✅ 있음 | ✅ 있음 | ✅ 응답함 | ⚠️ 미확인 | 실제 테스트 실행 필요 |
+| **Env Manager** | ✅ 있음 | ✅ 있음 | ✅ 응답함 | ⚠️ 미확인 | UI 동작 확인 필요 |
+| **Project Context** | ✅ 있음 | ❌ 없음 | ✅ 응답함 | ❌ 미동작 | UI 없음 |
+
+#### API 테스트 상세 결과
+
+```bash
+# Checkpoint - API 응답하지만 실제 기록 안됨
+GET /api/projects/:id/checkpoint → [] (빈 배열)
+GET /api/projects/:id/checkpoint/status → {"hasChanges":false,"files":[]}
+
+# Architect Review - API 응답
+GET /api/projects/:id/architect/reviews → 리뷰 목록 반환
+
+# Database Viewer - 500 에러
+GET /api/projects/:id/database/tables → {"statusCode":500,"message":"Internal server error"}
+
+# Testing (E2E) - API 응답
+GET /api/projects/:id/testing/scenarios → [] (빈 배열)
+
+# Env Manager - API 응답
+GET /api/projects/:id/env → .env 파일 목록 및 변수 반환
+
+# Project Context - API 응답
+GET /api/projects/:id/context/exists → {"exists":false,"content":null}
+```
 
 ### 2.2 공통 문제점
 
@@ -49,46 +72,85 @@ flowchart TB
 #### Checkpoint (체크포인트)
 - **백엔드**: `apps/server/src/checkpoint/`
 - **프론트엔드**: `CheckpointPanel.tsx`
-- **예상 문제**:
-  - Git 초기화 안됨 시 오류
-  - 대용량 프로젝트 성능 문제
-  - diff 표시 UI 렌더링 이슈
+- **확인된 문제**:
+  - ❌ **체크포인트 기록이 실제로 생성되지 않음**
+  - 빈 배열만 반환됨 - 저장 로직 또는 트리거 확인 필요
+  - 수동 저장 버튼 동작 확인 필요
 
 #### Architect (코드 리뷰)
 - **백엔드**: `apps/server/src/architect/`
 - **프론트엔드**: `ArchitectPanel.tsx`
-- **예상 문제**:
-  - `build.complete` 이벤트 발생 안함
-  - Claude CLI 연동 오류
-  - 리뷰 결과 파싱 실패
+- **확인된 문제**:
+  - ⚠️ **리뷰 결과가 실제로 반영되는지 불확실**
+  - API는 응답하지만 리뷰 트리거 및 결과 반영 확인 필요
+  - Claude CLI 연동 상태 확인 필요
 
 #### Database Viewer (DB 뷰어)
 - **백엔드**: `apps/server/src/database/`
 - **프론트엔드**: `DatabasePanel.tsx`
-- **예상 문제**:
-  - Prisma 스키마 없는 프로젝트 오류
-  - SQLite vs PostgreSQL 처리
-  - 대용량 테이블 페이지네이션
+- **확인된 문제**:
+  - ❌ **500 Internal Server Error 발생**
+  - DB가 없는 프로젝트에서 적절한 에러 메시지 대신 500 에러 반환
+  - NotFoundException 처리가 제대로 안 됨
 
 #### Testing (E2E 테스팅)
 - **백엔드**: `apps/server/src/testing/`
 - **프론트엔드**: `TestRunner.tsx`
-- **예상 문제**:
-  - Playwright 미설치
-  - 프리뷰 미실행 시 테스트 불가
-  - 시나리오 저장 안됨 (메모리 기반)
+- **확인된 문제**:
+  - ⚠️ **API는 응답하지만 실제 테스트 실행 확인 필요**
+  - Playwright 의존성 및 설치 상태 확인 필요
+  - 시나리오 저장이 메모리 기반인지 DB 기반인지 확인 필요
 
 #### Env Manager (환경변수)
 - **백엔드**: `apps/server/src/env/`
 - **프론트엔드**: `EnvPanel.tsx`
-- **예상 문제**:
-  - API 경로 불일치 (`/env/file` vs `/env/:path`)
-  - .env 파일 없는 경우 처리
+- **확인된 문제**:
+  - ✅ **API 정상 동작 확인**
+  - .env 파일 목록 및 변수 반환됨
+  - UI 연동 상태 추가 확인 필요
 
 #### Project Context (프로젝트 컨텍스트)
 - **백엔드**: `apps/server/src/project-context/`
 - **프론트엔드**: ❌ 없음
-- **문제**: UI가 전혀 없음
+- **확인된 문제**:
+  - ✅ **API 정상 동작** (`exists: false` 적절히 반환)
+  - ❌ **UI가 전혀 없음** - 백엔드만 있음
+
+---
+
+## 2.4 핵심 이벤트 분석
+
+### build.complete 이벤트
+
+체크포인트와 코드리뷰 기능은 모두 `build.complete` 이벤트에 의존합니다:
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant ChatService
+    participant ClaudeCLI
+    participant EventEmitter
+    participant Checkpoint
+    participant Architect
+
+    User->>ChatService: sendMessage(mode="build")
+    ChatService->>ClaudeCLI: executePrompt()
+    ClaudeCLI-->>ChatService: tool_use events (Write, Edit...)
+    ChatService->>ChatService: toolActivities.push()
+    ClaudeCLI-->>ChatService: complete
+    ChatService->>EventEmitter: emit("build.complete")
+    EventEmitter->>Checkpoint: handleBuildComplete()
+    EventEmitter->>Architect: handleBuildComplete()
+```
+
+**발생 조건**:
+- `mode === "build"` (기본값)
+- `toolActivities.length > 0` (Write, Edit 등 도구 사용)
+
+**문제 가능성**:
+1. Claude CLI의 `tool_use` 이벤트가 파싱되지 않음
+2. 프로젝트에 Git 초기화가 안됨
+3. 이벤트 전달 과정에서 누락
 
 ---
 
@@ -96,28 +158,28 @@ flowchart TB
 
 ### 3.1 우선순위 1: 핵심 기능 정상화
 
-| 작업 | 설명 | 난이도 |
-|------|------|--------|
-| **P2-001** | Checkpoint 기능 테스트 및 수정 | 중 |
-| **P2-002** | Database Viewer 연동 수정 | 중 |
-| **P2-003** | Architect Review 트리거 수정 | 고 |
-| **P2-004** | Env Manager API 경로 수정 | 저 |
+| 작업 | 설명 | 난이도 | 상태 |
+|------|------|--------|------|
+| **P2-001** | build.complete 이벤트 디버깅 | 고 | 대기 |
+| **P2-002** | Database Viewer 500 에러 수정 | 저 | 대기 |
+| **P2-003** | Checkpoint Git 초기화 로직 확인 | 중 | 대기 |
+| **P2-004** | Architect Review 트리거 확인 | 중 | 대기 |
 
 ### 3.2 우선순위 2: 기능 완성
 
-| 작업 | 설명 | 난이도 |
-|------|------|--------|
-| **P2-005** | Project Context UI 구현 | 중 |
-| **P2-006** | Testing 기능 DB 저장 | 중 |
-| **P2-007** | 에러 핸들링 개선 | 중 |
+| 작업 | 설명 | 난이도 | 상태 |
+|------|------|--------|------|
+| **P2-005** | Project Context UI 구현 | 중 | 대기 |
+| **P2-006** | Testing 기능 E2E 확인 | 중 | 대기 |
+| **P2-007** | 에러 핸들링 개선 (500 → 적절한 HTTP 코드) | 중 | 대기 |
 
 ### 3.3 우선순위 3: 고도화
 
-| 작업 | 설명 | 난이도 |
-|------|------|--------|
-| **P2-008** | Checkpoint 자동 저장 | 중 |
-| **P2-009** | Database Viewer SQL 에디터 개선 | 중 |
-| **P2-010** | Review 결과 요약 대시보드 | 중 |
+| 작업 | 설명 | 난이도 | 상태 |
+|------|------|--------|------|
+| **P2-008** | Checkpoint 자동 저장 | 중 | 대기 |
+| **P2-009** | Database Viewer SQL 에디터 개선 | 중 | 대기 |
+| **P2-010** | Review 결과 요약 대시보드 | 중 | 대기 |
 
 ---
 
