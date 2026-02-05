@@ -15,6 +15,7 @@ export class FileWatcherService implements OnModuleDestroy {
   private readonly logger = new Logger(FileWatcherService.name);
   private watchers: Map<string, FSWatcher> = new Map();
   private changeSubjects: Map<string, Subject<FileChangeEvent>> = new Map();
+  private debounceTimers: Map<string, NodeJS.Timeout> = new Map();
 
   /**
    * Start watching a project directory for file changes
@@ -55,7 +56,6 @@ export class FileWatcherService implements OnModuleDestroy {
     });
 
     // Debounce rapid changes
-    let debounceTimer: NodeJS.Timeout | null = null;
     let pendingChanges: FileChangeEvent[] = [];
 
     const emitChanges = () => {
@@ -72,16 +72,21 @@ export class FileWatcherService implements OnModuleDestroy {
 
         pendingChanges = [];
       }
+      // Clear the timer reference after emitting
+      this.debounceTimers.delete(projectId);
     };
 
     const scheduleEmit = (event: FileChangeEvent) => {
       pendingChanges.push(event);
 
-      if (debounceTimer) {
-        clearTimeout(debounceTimer);
+      // Clear existing timer if any
+      const existingTimer = this.debounceTimers.get(projectId);
+      if (existingTimer) {
+        clearTimeout(existingTimer);
       }
 
-      debounceTimer = setTimeout(emitChanges, 300);
+      const timer = setTimeout(emitChanges, 300);
+      this.debounceTimers.set(projectId, timer);
     };
 
     watcher.on("add", (filePath) => {
@@ -128,6 +133,14 @@ export class FileWatcherService implements OnModuleDestroy {
    * Stop watching a project
    */
   stopWatching(projectId: string): void {
+    // Clear debounce timer first to prevent pending emissions
+    const timer = this.debounceTimers.get(projectId);
+    if (timer) {
+      clearTimeout(timer);
+      this.debounceTimers.delete(projectId);
+      this.logger.debug(`Cleared debounce timer for ${projectId}`);
+    }
+
     const watcher = this.watchers.get(projectId);
     if (watcher) {
       watcher.close();
@@ -157,6 +170,13 @@ export class FileWatcherService implements OnModuleDestroy {
   }
 
   onModuleDestroy() {
+    // Clean up all debounce timers first
+    for (const [projectId, timer] of this.debounceTimers) {
+      clearTimeout(timer);
+      this.logger.debug(`Cleared debounce timer for ${projectId} on destroy`);
+    }
+    this.debounceTimers.clear();
+
     // Clean up all watchers
     for (const [projectId] of this.watchers) {
       this.stopWatching(projectId);
