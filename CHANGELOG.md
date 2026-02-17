@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.40](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.39...claudeship-v0.2.40) (2026-02-17)
+
+
+### Features
+
+* Implement Phase 002 - Claude Code modes & dev productivity features ([37ff5bb](https://github.com/Nicered/ClaudeShip/commit/37ff5bbbed0bf4e5ba1fa6f12e5b5fcd48d2b961))
+
 ## [0.2.39](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.38...claudeship-v0.2.39) (2026-02-17)
 
 
