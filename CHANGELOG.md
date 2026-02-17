@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.39](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.38...claudeship-v0.2.39) (2026-02-17)
+
+
+### Documentation
+
+* Add Phase 002 overview and reorganize design docs ([328805b](https://github.com/Nicered/ClaudeShip/commit/328805bfb60caa388de9931f040a90ba229a86b0))
+* Reorganize design documents into phase-based structure ([79a4341](https://github.com/Nicered/ClaudeShip/commit/79a4341bcb5d7921bd4ae5c3e4df6cd421be134a))
+* Update Phase 002 overview with test results ([312a7b5](https://github.com/Nicered/ClaudeShip/commit/312a7b5b9032704c919f703e45c4ca44fcd112e1))
+
 ## [0.2.38](https://github.com/Nicered/ClaudeShip/compare/claudeship-v0.2.37...claudeship-v0.2.38) (2026-02-05)
 
 
