@@ -4,7 +4,7 @@ export enum Role {
   SYSTEM = "SYSTEM",
 }
 
-export type ChatMode = "ask" | "build";
+export type ChatMode = "ask" | "build" | "plan";
 
 export interface ChatMessage {
   id: string;

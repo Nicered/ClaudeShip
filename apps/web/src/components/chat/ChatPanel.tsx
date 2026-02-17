@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { RotateCcw, MessageSquarePlus } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
 import { api } from "@/lib/api";
+import { ClaudeStatusBar } from "./ClaudeStatusBar";
 
 interface ChatPanelProps {
   projectId: string;
@@ -72,6 +73,9 @@ export function ChatPanel({ projectId }: ChatPanelProps) {
           <span className="hidden sm:inline">{t("chat.newConversation")}</span>
         </Button>
       </div>
+
+      {/* Claude Status Bar */}
+      <ClaudeStatusBar />
 
       <MessageList
         messages={messages}

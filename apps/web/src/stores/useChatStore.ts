@@ -58,6 +58,10 @@ interface ChatState {
   pendingQuestion: AskUserQuestionData | null;
   attachedFiles: AttachedFile[];
   isUploading: boolean;
+  sessionId: string | null;
+  lastCost: number | null;
+  totalCost: number;
+  streamStartedAt: number | null;
 
   initForProject: (projectId: string) => void;
   fetchMessages: (projectId: string) => Promise<void>;
@@ -89,6 +93,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
   pendingQuestion: null,
   attachedFiles: [],
   isUploading: false,
+  sessionId: null,
+  lastCost: null,
+  totalCost: 0,
+  streamStartedAt: null,
 
   initForProject: (projectId: string) => {
     const files = get().attachedFiles;
@@ -458,7 +466,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
     set({
       isStreaming: true,
       streamingBlocks: [],
-      error: null
+      error: null,
+      streamStartedAt: Date.now(),
     });
 
     try {
@@ -524,7 +533,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
                 return;
               }
 
-              if (data.type === "text" && data.content) {
+              if (data.type === "init" && data.sessionId) {
+                set({ sessionId: data.sessionId });
+              } else if (data.type === "complete") {
+                const cost = data.cost as number | undefined;
+                if (cost) {
+                  set((state) => ({
+                    lastCost: cost,
+                    totalCost: state.totalCost + cost,
+                  }));
+                }
+              } else if (data.type === "text" && data.content) {
                 // Check for restart-preview marker
                 const hasRestartMarker = RESTART_MARKER_REGEX.test(data.content);
                 // Reset regex lastIndex after test()

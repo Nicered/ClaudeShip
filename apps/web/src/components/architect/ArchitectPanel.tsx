@@ -68,6 +68,7 @@ export function ArchitectPanel({ projectId }: ArchitectPanelProps) {
   } = useArchitectStore();
 
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
 
   useEffect(() => {
     fetchReviews(projectId);
@@ -94,15 +95,24 @@ export function ArchitectPanel({ projectId }: ArchitectPanelProps) {
 
   const selectedReview = activeReview?.id === selectedReviewId ? activeReview : null;
 
+  const filteredIssues = selectedReview?.issues
+    ? categoryFilter
+      ? selectedReview.issues.filter((i) => i.category === categoryFilter)
+      : selectedReview.issues
+    : [];
+
   const groupedIssues: Record<string, ReviewIssue[]> = {};
-  if (selectedReview?.issues) {
-    for (const issue of selectedReview.issues) {
-      if (!groupedIssues[issue.severity]) {
-        groupedIssues[issue.severity] = [];
-      }
-      groupedIssues[issue.severity].push(issue);
+  for (const issue of filteredIssues) {
+    if (!groupedIssues[issue.severity]) {
+      groupedIssues[issue.severity] = [];
     }
+    groupedIssues[issue.severity].push(issue);
   }
+
+  // Unique categories from all issues for filter buttons
+  const availableCategories = selectedReview?.issues
+    ? [...new Set(selectedReview.issues.map((i) => i.category))]
+    : [];
 
   const severityOrder = ["critical", "high", "medium", "low"];
 
@@ -233,8 +243,41 @@ export function ArchitectPanel({ projectId }: ArchitectPanelProps) {
               <div className="space-y-3">
                 <h4 className="font-medium text-sm flex items-center gap-2">
                   <AlertTriangle className="h-4 w-4" />
-                  Issues ({selectedReview.issues.length})
+                  Issues ({filteredIssues.length}
+                  {categoryFilter ? ` / ${selectedReview.issues.length}` : ""})
                 </h4>
+
+                {/* Category filter */}
+                {availableCategories.length > 1 && (
+                  <div className="flex flex-wrap gap-1">
+                    <button
+                      onClick={() => setCategoryFilter(null)}
+                      className={cn(
+                        "px-2 py-0.5 rounded text-xs font-medium transition-colors",
+                        !categoryFilter
+                          ? "bg-foreground text-background"
+                          : "bg-muted text-muted-foreground hover:bg-muted/80",
+                      )}
+                    >
+                      All
+                    </button>
+                    {availableCategories.map((cat) => (
+                      <button
+                        key={cat}
+                        onClick={() => setCategoryFilter(categoryFilter === cat ? null : cat)}
+                        className={cn(
+                          "px-2 py-0.5 rounded text-xs font-medium transition-colors capitalize",
+                          categoryFilter === cat
+                            ? "bg-foreground text-background"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80",
+                        )}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
                 {severityOrder.map((severity) =>
                   groupedIssues[severity]?.length ? (
                     <div key={severity} className="space-y-2">
@@ -242,7 +285,7 @@ export function ArchitectPanel({ projectId }: ArchitectPanelProps) {
                         {severity} ({groupedIssues[severity].length})
                       </h5>
                       {groupedIssues[severity].map((issue, idx) => (
-                        <IssueCard key={`${severity}-${idx}`} issue={issue} />
+                        <IssueCard key={`${severity}-${idx}`} issue={issue} projectId={projectId} />
                       ))}
                     </div>
                   ) : null,

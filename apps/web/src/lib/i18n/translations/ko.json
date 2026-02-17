@@ -50,7 +50,9 @@
     "toolCompleted": "완료",
     "newConversation": "새 대화",
     "modeAsk": "Ask",
-    "modeBuild": "Build"
+    "modePlan": "Plan",
+    "modeBuild": "Build",
+    "planPlaceholder": "구현 계획을 세워달라고 요청하세요..."
   },
   "preview": {
     "title": "미리보기",

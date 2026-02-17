@@ -11,6 +11,8 @@ import { CheckpointPanel } from "@/components/checkpoint/CheckpointPanel";
 import { EnvPanel } from "@/components/env/EnvPanel";
 import { ArchitectPanel } from "@/components/architect/ArchitectPanel";
 import { ProjectContextPanel } from "@/components/project-context/ProjectContextPanel";
+import { AgentPanel } from "@/components/agent/AgentPanel";
+import { TerminalPanel } from "@/components/terminal/TerminalPanel";
 import {
   FolderTree,
   X,
@@ -21,6 +23,8 @@ import {
   Settings2,
   Search,
   FileText,
+  Bot,
+  Terminal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
@@ -35,7 +39,7 @@ interface SelectedFile {
   extension: string;
 }
 
-type RightPanelTab = "preview" | "database" | "testing" | "checkpoint" | "env" | "review" | "context";
+type RightPanelTab = "preview" | "database" | "testing" | "checkpoint" | "env" | "review" | "context" | "agents" | "terminal";
 
 const tabConfig: { id: RightPanelTab; icon: React.ReactNode; label: string }[] = [
   { id: "preview", icon: <Eye className="h-4 w-4" />, label: "Preview" },
@@ -45,6 +49,8 @@ const tabConfig: { id: RightPanelTab; icon: React.ReactNode; label: string }[] =
   { id: "checkpoint", icon: <GitBranch className="h-4 w-4" />, label: "Checkpoint" },
   { id: "env", icon: <Settings2 className="h-4 w-4" />, label: "Env" },
   { id: "context", icon: <FileText className="h-4 w-4" />, label: "Context" },
+  { id: "agents", icon: <Bot className="h-4 w-4" />, label: "Agents" },
+  { id: "terminal", icon: <Terminal className="h-4 w-4" />, label: "Terminal" },
 ];
 
 export function WorkspaceLayout({ projectId }: WorkspaceLayoutProps) {
@@ -78,6 +84,10 @@ export function WorkspaceLayout({ projectId }: WorkspaceLayoutProps) {
         return <ArchitectPanel projectId={projectId} />;
       case "context":
         return <ProjectContextPanel projectId={projectId} />;
+      case "agents":
+        return <AgentPanel projectId={projectId} />;
+      case "terminal":
+        return <TerminalPanel projectId={projectId} />;
       default:
         return <PreviewPanel projectId={projectId} />;
     }
@@ -151,6 +161,7 @@ export function WorkspaceLayout({ projectId }: WorkspaceLayoutProps) {
           path={selectedFile.path}
           content={selectedFile.content}
           language={selectedFile.extension}
+          projectId={projectId}
           onClose={handleCloseViewer}
         />
       )}

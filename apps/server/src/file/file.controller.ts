@@ -1,9 +1,11 @@
 import {
   Controller,
   Get,
+  Put,
   Post,
   Param,
   Query,
+  Body,
   UseInterceptors,
   UploadedFiles,
   BadRequestException,
@@ -29,6 +31,14 @@ export class FileController {
     @Query("path") filePath: string
   ): Promise<{ content: string; language: string }> {
     return this.fileService.getFileContent(projectId, filePath);
+  }
+
+  @Put("content")
+  async saveFileContent(
+    @Param("projectId") projectId: string,
+    @Body() body: { path: string; content: string },
+  ): Promise<{ success: boolean }> {
+    return this.fileService.saveFileContent(projectId, body.path, body.content);
   }
 
   @Post("upload")

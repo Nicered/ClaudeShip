@@ -1,8 +1,9 @@
 "use client";
 
-import { X, ExternalLink, Copy, Check } from "lucide-react";
+import { X, ExternalLink, Copy, Check, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useChatStore } from "@/stores/useChatStore";
 
 export interface ErrorInfo {
   type: "compile" | "runtime" | "network";
@@ -18,10 +19,12 @@ export interface ErrorInfo {
 interface ErrorOverlayProps {
   error: ErrorInfo;
   onDismiss: () => void;
+  projectId?: string;
 }
 
-export function ErrorOverlay({ error, onDismiss }: ErrorOverlayProps) {
+export function ErrorOverlay({ error, onDismiss, projectId }: ErrorOverlayProps) {
   const [copied, setCopied] = useState(false);
+  const { sendMessage, setMode } = useChatStore();
 
   const handleCopy = async () => {
     const text = [
@@ -107,7 +110,25 @@ export function ErrorOverlay({ error, onDismiss }: ErrorOverlayProps) {
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-3 bg-zinc-800/50 border-t border-zinc-700 flex justify-end">
+          <div className="px-4 py-3 bg-zinc-800/50 border-t border-zinc-700 flex justify-end gap-2">
+            {projectId && (
+              <Button
+                size="sm"
+                onClick={() => {
+                  const location = error.location
+                    ? `\nFile: ${error.location.file}:${error.location.line}:${error.location.column}`
+                    : "";
+                  const prompt = `Fix this ${error.type} error:\n${error.message}${location}${error.stack ? `\n\nStack trace:\n${error.stack}` : ""}`;
+                  setMode("build");
+                  sendMessage(projectId, prompt);
+                  onDismiss();
+                }}
+                className="bg-violet-600 hover:bg-violet-700 text-white"
+              >
+                <Wand2 className="h-4 w-4 mr-1" />
+                AI Auto-fix
+              </Button>
+            )}
             <Button
               variant="outline"
               size="sm"

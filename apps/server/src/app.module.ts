@@ -15,6 +15,8 @@ import { CheckpointModule } from "./checkpoint/checkpoint.module";
 import { ProjectContextModule } from "./project-context/project-context.module";
 import { EnvModule } from "./env/env.module";
 import { ArchitectModule } from "./architect/architect.module";
+import { AgentModule } from "./agent/agent.module";
+import { TerminalModule } from "./terminal/terminal.module";
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { ArchitectModule } from "./architect/architect.module";
     ProjectContextModule,
     EnvModule,
     ArchitectModule,
+    AgentModule,
+    TerminalModule,
   ],
   controllers: [AppController],
   providers: [AppService],

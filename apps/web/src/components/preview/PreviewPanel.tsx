@@ -442,7 +442,7 @@ export function PreviewPanel({ projectId }: PreviewPanelProps) {
             />
             {/* Error Overlay */}
             {buildError && (
-              <ErrorOverlay error={buildError} onDismiss={handleDismissError} />
+              <ErrorOverlay error={buildError} onDismiss={handleDismissError} projectId={projectId} />
             )}
             {/* Device size indicator */}
             {device !== "desktop" && (
