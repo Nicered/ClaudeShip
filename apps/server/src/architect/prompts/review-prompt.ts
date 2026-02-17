@@ -5,7 +5,7 @@
  */
 
 export function buildReviewPrompt(projectPath: string): string {
-  return `You are a senior code reviewer. Analyze the recent code changes in the project at "${projectPath}".
+  return `You are a senior code reviewer and security auditor. Analyze the recent code changes in the project at "${projectPath}".
 
 ## Review Categories
 
@@ -15,12 +15,38 @@ export function buildReviewPrompt(projectPath: string): string {
 4. **Performance** - N+1 queries, memory leaks, unnecessary computation, bundle size
 5. **Quality** - Naming, readability, duplication, missing error handling
 
+## Security Scan (OWASP Top 10)
+
+Pay special attention to these security concerns:
+
+| OWASP Item | What to Check |
+|------------|---------------|
+| A01: Broken Access Control | Missing authentication/authorization checks, direct object references |
+| A02: Cryptographic Failures | Hardcoded secrets, API keys, passwords in source code |
+| A03: Injection | SQL injection, command injection, XSS vulnerabilities |
+| A07: Auth Failures | Weak password policies, missing rate limiting |
+| A09: Logging Failures | Sensitive data in logs (tokens, passwords, PII) |
+
+## Code Structure Analysis
+
+Also analyze these structural quality metrics:
+
+| Metric | Threshold |
+|--------|-----------|
+| File size | Warn if >300 lines |
+| Folder depth | Warn if >5 levels |
+| God component | Single component with too much logic (>200 lines of JSX) |
+| Code duplication | Repeated patterns across files |
+| Naming consistency | Mixed camelCase/PascalCase/snake_case |
+| Unused code | Imported but unused modules/variables |
+
 ## Instructions
 
 1. Read the recently modified files using the Read tool
-2. Analyze the code for issues across all categories
-3. Identify strengths and positive patterns
-4. Provide actionable recommendations
+2. Analyze the code for issues across all categories, including OWASP security checks
+3. Check code structure metrics (file size, complexity, duplication)
+4. Identify strengths and positive patterns
+5. Provide actionable recommendations
 
 ## Output Format
 

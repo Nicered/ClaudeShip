@@ -1,268 +1,213 @@
-# Phase 002: 기능 고도화 Overview
+# Phase 002: Claude Code 모드 노출 및 개발 생산성 기능
 
-> 작성일: 2025-12-30
-> 상태: 진행 중
+> 작성일: 2026-02-17
+> 상태: 구현 완료
+> Issue: #94
+> 브랜치: `feature/#94-phase002-claude-code-modes`
 
 ---
 
 ## 1. Phase 002 목표
 
-Phase 001에서 구현된 기능들이 **실제로 동작하지 않거나 불완전한 상태**입니다. Phase 002의 목표는:
+Phase 001의 버그 수정(PR #84)이 완료된 후, Phase 002는 **신규 기능 개발**에 집중합니다.
 
-1. **기존 기능 정상화** - 구현되었지만 동작하지 않는 기능들 수정
-2. **기능 고도화** - 기본 구현에서 실용적인 수준으로 개선
-3. **추가 기능 식별** - 리플릿 등 유사 서비스 대비 누락된 기능 파악
+### 핵심 전략
+> **Claude Code CLI의 강력한 기능을 웹 UI로 노출 + 클린 코드 자동화**
+
+Replit Agent 대비 ClaudeShip의 포지셔닝: **"Claude Code를 가장 잘 활용하는 웹 IDE"**
+
+### 왜 이 전략인가?
+
+```mermaid
+flowchart LR
+    subgraph Replit
+        R1[300+ AI 모델]
+        R2[배포/호스팅]
+        R3[멀티플레이어]
+        R4[모바일 앱]
+    end
+
+    subgraph ClaudeShip
+        C1[Claude Code CLI 직접 통합]
+        C2[Plan/Build/Ask 모드]
+        C3[서브에이전트 시각화]
+        C4[클린 코드 자동화]
+    end
+
+    style ClaudeShip fill:#e8f5e9
+    style Replit fill:#fff3e0
+```
+
+- Replit은 범용 클라우드 IDE → 전체 인프라/모델 경쟁에서 이기기 어려움
+- ClaudeShip은 Claude Code CLI를 **백엔드 엔진**으로 직접 사용 → CLI의 모든 기능을 웹에서 활용
+- Replit의 약점(지저분한 코드 생성)을 클린 코드 전략으로 차별화
 
 ---
 
-## 2. 현재 상황 분석
+## 2. Phase 001 버그 수정 현황
 
-### 2.1 API 테스트 결과 (2025-01-xx)
+> PR #84에서 해결 완료
 
-| 기능 | 백엔드 | 프론트엔드 | API 상태 | 실사용 상태 | 문제점 |
-|------|--------|-----------|----------|------------|--------|
-| **Checkpoint** | ✅ 있음 | ✅ 있음 | ✅ 응답함 | ❌ 미동작 | 체크포인트 기록이 안됨 |
-| **Architect (Review)** | ✅ 있음 | ✅ 있음 | ✅ 응답함 | ⚠️ 불확실 | 리뷰 결과 반영 확인 필요 |
-| **Database Viewer** | ✅ 있음 | ✅ 있음 | ❌ 500에러 | ❌ 미동작 | DB 없는 프로젝트 에러 처리 미흡 |
-| **Testing (E2E)** | ✅ 있음 | ✅ 있음 | ✅ 응답함 | ⚠️ 미확인 | 실제 테스트 실행 필요 |
-| **Env Manager** | ✅ 있음 | ✅ 있음 | ✅ 응답함 | ⚠️ 미확인 | UI 동작 확인 필요 |
-| **Project Context** | ✅ 있음 | ❌ 없음 | ✅ 응답함 | ❌ 미동작 | UI 없음 |
+| 작업 | 설명 | 상태 |
+|------|------|------|
+| P2-001 | build.complete 이벤트 디버깅 | ✅ 완료 |
+| P2-002 | Database Viewer 500 에러 수정 | ✅ 완료 |
+| P2-003 | Checkpoint Git 초기화 로직 수정 | ✅ 완료 |
+| P2-004 | Architect Review 트리거 수정 | ✅ 완료 |
+| P2-005 | Project Context UI 구현 | ✅ 완료 |
+| P2-006~010 | 기타 버그 수정 및 고도화 | ✅ 완료 |
 
-#### API 테스트 상세 결과
+---
 
-```bash
-# Checkpoint - API 응답하지만 실제 기록 안됨
-GET /api/projects/:id/checkpoint → [] (빈 배열)
-GET /api/projects/:id/checkpoint/status → {"hasChanges":false,"files":[]}
+## 3. Phase 002 신규 기능 목록
 
-# Architect Review - API 응답
-GET /api/projects/:id/architect/reviews → 리뷰 목록 반환
+### 3.1 1단계: Claude Code 모드 노출 (핵심)
 
-# Database Viewer - 500 에러
-GET /api/projects/:id/database/tables → {"statusCode":500,"message":"Internal server error"}
+| ID | 기능 | 설명 | 설계 문서 |
+|----|------|------|-----------|
+| P2-011 | Plan Mode 지원 | Plan/Build/Ask 3단 모드 토글 | [002-feature-gap-analysis.md](./002-feature-gap-analysis.md) |
+| P2-012 | 상태 대시보드 | 세션, 도구, 토큰, 비용 실시간 표시 | [003-claude-mode-features.md](./003-claude-mode-features.md) |
+| P2-013 | 도구 시각화 개선 | 카테고리별 색상, 요약 배지, 통계 | [003-claude-mode-features.md](./003-claude-mode-features.md) |
 
-# Testing (E2E) - API 응답
-GET /api/projects/:id/testing/scenarios → [] (빈 배열)
+### 3.2 2단계: 개발 생산성
 
-# Env Manager - API 응답
-GET /api/projects/:id/env → .env 파일 목록 및 변수 반환
+| ID | 기능 | 설명 | 설계 문서 |
+|----|------|------|-----------|
+| P2-014 | 웹 터미널 | xterm.js + node-pty | [004-dev-productivity.md](./004-dev-productivity.md) |
+| P2-015 | 파일 편집기 | Monaco/CodeMirror 통합 | [004-dev-productivity.md](./004-dev-productivity.md) |
+| P2-022 | 에러→AI 자동수정 | 에러 감지→채팅 전달→수정 | [004-dev-productivity.md](./004-dev-productivity.md) |
 
-# Project Context - API 응답
-GET /api/projects/:id/context/exists → {"exists":false,"content":null}
-```
+### 3.3 3단계: AI 에이전트 고도화
 
-### 2.2 공통 문제점
+| ID | 기능 | 설명 | 설계 문서 |
+|----|------|------|-----------|
+| P2-017 | Architect 고도화 | 보안 스캔, 코드 구조 분석, Fix with Agent | [005-agent-enhancement.md](./005-agent-enhancement.md) |
+| P2-018 | 서브에이전트 UI | 활성 에이전트 목록, 진행 상태, 결과 요약 | [005-agent-enhancement.md](./005-agent-enhancement.md) |
+| P2-019 | 커스텀 에이전트 관리 | .claude/agents/ YAML 관리 UI | [005-agent-enhancement.md](./005-agent-enhancement.md) |
+
+### 3.4 4단계: 완성도
+
+| ID | 기능 | 설명 | 설계 문서 |
+|----|------|------|-----------|
+| P2-020 | 체크포인트 개선 | 시각적 타임라인, 미리보기 | [006-polish-features.md](./006-polish-features.md) |
+| P2-021 | 설정 마법사 | 템플릿, AI 추천, 보일러플레이트 | [006-polish-features.md](./006-polish-features.md) |
+
+### 제외
+- ~~P2-016: 배포 기능 (Vercel/Netlify)~~ — 스코프 제외
+
+---
+
+## 4. 클린 코드 전략 (Replit 차별화)
+
+Replit Agent의 문제: **코드 구조가 지저분함** (God component, 중복 코드, flat 구조)
 
 ```mermaid
 flowchart TB
-    A[Phase 001 구현] --> B{문제점}
-    B --> C[API 연동 불일치]
-    B --> D[통합 테스트 부재]
-    B --> E[에러 핸들링 미흡]
-    B --> F[UI/UX 미완성]
+    subgraph "레이어 1: 예방"
+        P1[PromptBuilderService 규칙 주입]
+        P2[PROJECT.md 자동 생성]
+        P3[컨벤션 강제]
+    end
 
-    C --> G[프론트엔드 API 경로와 백엔드 라우트 불일치]
-    D --> H[실제 사용 시나리오 테스트 안됨]
-    E --> I[에러 시 사용자에게 피드백 없음]
-    F --> J[일부 기능 UI 미구현]
+    subgraph "레이어 2: 감지"
+        D1[빌드 후 자동 구조 분석]
+        D2[파일 크기/폴더 깊이 체크]
+        D3[점수화 + 개선 제안]
+    end
+
+    subgraph "레이어 3: 자동 정리"
+        R1["정리해줘" 원클릭 리팩토링]
+        R2[파일 분리/import 정리]
+        R3[네이밍 통일]
+    end
+
+    P1 --> D1
+    D1 --> R1
+
+    style P1 fill:#e3f2fd
+    style D1 fill:#fff3e0
+    style R1 fill:#e8f5e9
 ```
 
-### 2.3 기능별 상세 분석
-
-#### Checkpoint (체크포인트)
-- **백엔드**: `apps/server/src/checkpoint/`
-- **프론트엔드**: `CheckpointPanel.tsx`
-- **확인된 문제**:
-  - ❌ **체크포인트 기록이 실제로 생성되지 않음**
-  - 빈 배열만 반환됨 - 저장 로직 또는 트리거 확인 필요
-  - 수동 저장 버튼 동작 확인 필요
-
-#### Architect (코드 리뷰)
-- **백엔드**: `apps/server/src/architect/`
-- **프론트엔드**: `ArchitectPanel.tsx`
-- **확인된 문제**:
-  - ⚠️ **리뷰 결과가 실제로 반영되는지 불확실**
-  - API는 응답하지만 리뷰 트리거 및 결과 반영 확인 필요
-  - Claude CLI 연동 상태 확인 필요
-
-#### Database Viewer (DB 뷰어)
-- **백엔드**: `apps/server/src/database/`
-- **프론트엔드**: `DatabasePanel.tsx`
-- **확인된 문제**:
-  - ❌ **500 Internal Server Error 발생**
-  - DB가 없는 프로젝트에서 적절한 에러 메시지 대신 500 에러 반환
-  - NotFoundException 처리가 제대로 안 됨
-
-#### Testing (E2E 테스팅)
-- **백엔드**: `apps/server/src/testing/`
-- **프론트엔드**: `TestRunner.tsx`
-- **확인된 문제**:
-  - ⚠️ **API는 응답하지만 실제 테스트 실행 확인 필요**
-  - Playwright 의존성 및 설치 상태 확인 필요
-  - 시나리오 저장이 메모리 기반인지 DB 기반인지 확인 필요
-
-#### Env Manager (환경변수)
-- **백엔드**: `apps/server/src/env/`
-- **프론트엔드**: `EnvPanel.tsx`
-- **확인된 문제**:
-  - ✅ **API 정상 동작 확인**
-  - .env 파일 목록 및 변수 반환됨
-  - UI 연동 상태 추가 확인 필요
-
-#### Project Context (프로젝트 컨텍스트)
-- **백엔드**: `apps/server/src/project-context/`
-- **프론트엔드**: ❌ 없음
-- **확인된 문제**:
-  - ✅ **API 정상 동작** (`exists: false` 적절히 반환)
-  - ❌ **UI가 전혀 없음** - 백엔드만 있음
+| 레이어 | 적용 기능 |
+|--------|-----------|
+| 예방 (프롬프트) | P2-011, P2-021 |
+| 감지 (Architect) | P2-017 |
+| 자동 정리 (리팩토링) | P2-017, P2-019 |
 
 ---
 
-## 2.4 핵심 이벤트 분석
+## 5. 아키텍처 개요
 
-### build.complete 이벤트
+### 현재 시스템 구조
 
-체크포인트와 코드리뷰 기능은 모두 `build.complete` 이벤트에 의존합니다:
+```mermaid
+flowchart TB
+    subgraph Frontend["프론트엔드 (Next.js)"]
+        Chat[ChatPanel]
+        ModeToggle[ModeToggle]
+        StatusBar[ClaudeStatusBar]
+        Preview[PreviewPanel]
+        Architect[ArchitectPanel]
+        Checkpoint[CheckpointPanel]
+        Terminal[TerminalPanel - NEW]
+        Editor[FileEditor - NEW]
+    end
+
+    subgraph Backend["백엔드 (NestJS)"]
+        ChatSvc[ChatService]
+        ClaudeCLI[ClaudeCliService]
+        ArchSvc[ArchitectService]
+        CheckSvc[CheckpointService]
+        PreviewSvc[PreviewService]
+        TermSvc[TerminalService - NEW]
+    end
+
+    subgraph External["외부"]
+        Claude[Claude Code CLI]
+    end
+
+    Chat --> ChatSvc
+    ChatSvc --> ClaudeCLI
+    ClaudeCLI --> Claude
+    ChatSvc --"build.complete"--> ArchSvc
+    ChatSvc --"build.complete"--> CheckSvc
+
+    style Terminal fill:#fff9c4
+    style Editor fill:#fff9c4
+    style TermSvc fill:#fff9c4
+    style StatusBar fill:#fff9c4
+```
+
+### 데이터 흐름 (SSE 기반)
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant ChatService
-    participant ClaudeCLI
-    participant EventEmitter
-    participant Checkpoint
-    participant Architect
+    participant Web as Frontend
+    participant API as Backend
+    participant CLI as Claude CLI
 
-    User->>ChatService: sendMessage(mode="build")
-    ChatService->>ClaudeCLI: executePrompt()
-    ClaudeCLI-->>ChatService: tool_use events (Write, Edit...)
-    ChatService->>ChatService: toolActivities.push()
-    ClaudeCLI-->>ChatService: complete
-    ChatService->>EventEmitter: emit("build.complete")
-    EventEmitter->>Checkpoint: handleBuildComplete()
-    EventEmitter->>Architect: handleBuildComplete()
-```
+    User->>Web: 메시지 입력 (mode=plan/build/ask)
+    Web->>API: POST /projects/:id/chat (SSE)
+    API->>CLI: spawn claude -p "prompt" --tools MODE_TOOLS
+    CLI-->>API: stream-json events (init, text, tool_use, complete)
+    API-->>Web: SSE data events
+    Web-->>User: 실시간 스트리밍 렌더링
 
-**발생 조건**:
-- `mode === "build"` (기본값)
-- `toolActivities.length > 0` (Write, Edit 등 도구 사용)
-
-**문제 가능성**:
-1. Claude CLI의 `tool_use` 이벤트가 파싱되지 않음
-2. 프로젝트에 Git 초기화가 안됨
-3. 이벤트 전달 과정에서 누락
-
----
-
-## 3. Phase 002 작업 목록
-
-### 3.1 우선순위 1: 핵심 기능 정상화
-
-| 작업 | 설명 | 난이도 | 상태 |
-|------|------|--------|------|
-| **P2-001** | build.complete 이벤트 디버깅 | 고 | 대기 |
-| **P2-002** | Database Viewer 500 에러 수정 | 저 | 대기 |
-| **P2-003** | Checkpoint Git 초기화 로직 확인 | 중 | 대기 |
-| **P2-004** | Architect Review 트리거 확인 | 중 | 대기 |
-
-### 3.2 우선순위 2: 기능 완성
-
-| 작업 | 설명 | 난이도 | 상태 |
-|------|------|--------|------|
-| **P2-005** | Project Context UI 구현 | 중 | 대기 |
-| **P2-006** | Testing 기능 E2E 확인 | 중 | 대기 |
-| **P2-007** | 에러 핸들링 개선 (500 → 적절한 HTTP 코드) | 중 | 대기 |
-
-### 3.3 우선순위 3: 고도화
-
-| 작업 | 설명 | 난이도 | 상태 |
-|------|------|--------|------|
-| **P2-008** | Checkpoint 자동 저장 | 중 | 대기 |
-| **P2-009** | Database Viewer SQL 에디터 개선 | 중 | 대기 |
-| **P2-010** | Review 결과 요약 대시보드 | 중 | 대기 |
-
----
-
-## 4. 추가 기능 후보 (리플릿 참조)
-
-### 4.1 리플릿 주요 기능 비교
-
-| 리플릿 기능 | ClaudeShip 현황 | 우선순위 |
-|------------|----------------|---------|
-| **Deployment** | ❌ 없음 | 높음 |
-| **Custom Domain** | ❌ 없음 | 중간 |
-| **Secrets Management** | ⚠️ Env로 일부 대체 | 낮음 |
-| **Multiplayer Editing** | ❌ 없음 | 낮음 |
-| **AI Chat History** | ✅ 있음 | - |
-| **File Editing** | ✅ 있음 (조회만) | 중간 |
-| **Shell/Terminal** | ❌ 없음 | 높음 |
-| **Package Manager UI** | ❌ 없음 | 중간 |
-| **Preview URL Sharing** | ❌ 없음 | 중간 |
-
-### 4.2 추가 기능 후보 목록
-
-```mermaid
-flowchart LR
-    A[Phase 002 추가 기능] --> B[터미널]
-    A --> C[배포]
-    A --> D[패키지 관리]
-    A --> E[파일 편집]
-
-    B --> B1[내장 터미널]
-    C --> C1[Vercel/Netlify 연동]
-    D --> D1[package.json UI]
-    E --> E1[Monaco Editor 통합]
-```
-
-#### 높음 우선순위
-1. **터미널** - 웹 기반 터미널 (xterm.js)
-2. **배포** - Vercel/Netlify 원클릭 배포
-
-#### 중간 우선순위
-3. **파일 편집** - 파일 탐색기에서 직접 편집
-4. **패키지 관리** - 의존성 추가/제거 UI
-
-#### 낮음 우선순위
-5. **Preview URL 공유** - 외부 접근 가능한 URL
-6. **멀티플레이어** - 실시간 협업
-
----
-
-## 5. Phase 002 로드맵
-
-```mermaid
-gantt
-    title Phase 002 로드맵
-    dateFormat X
-    axisFormat %s
-
-    section 1단계: 정상화
-    Checkpoint 수정       :a1, 0, 2
-    Database Viewer 수정  :a2, after a1, 2
-    Env Manager 수정      :a3, after a1, 1
-
-    section 2단계: 완성
-    Project Context UI    :b1, after a2, 2
-    Architect Review 수정 :b2, after a3, 3
-    에러 핸들링 개선      :b3, after b1, 2
-
-    section 3단계: 고도화
-    자동 체크포인트       :c1, after b2, 2
-    터미널 기능           :c2, after b3, 3
+    Note over API,CLI: build.complete 이벤트
+    API->>API: emit("build.complete")
+    API-->>API: Architect → 자동 리뷰
+    API-->>API: Checkpoint → 자동 저장
 ```
 
 ---
 
-## 6. 다음 단계
+## 6. 관련 문서
 
-1. **기능별 상세 분석 문서 작성** - 각 기능의 현재 문제점과 수정 방향
-2. **테스트 시나리오 작성** - 기능별 정상 동작 확인 기준
-3. **작업 착수** - 우선순위 순으로 수정 진행
-
----
-
-## 7. 관련 문서
-
-- [Phase 001 문서들](../phase-001/) - 기존 설계 문서
-- 002-checkpoint-fix.md (예정) - 체크포인트 수정 상세
-- 003-database-viewer-fix.md (예정) - DB 뷰어 수정 상세
+- [Phase 001 문서들](../phase-001/) - MVP 설계 문서
+- [002-feature-gap-analysis.md](./002-feature-gap-analysis.md) - Replit/Claude Code 비교 분석
+- [003-claude-mode-features.md](./003-claude-mode-features.md) - 1단계 기능 상세 설계
+- [004-dev-productivity.md](./004-dev-productivity.md) - 2단계 기능 상세 설계
+- [005-agent-enhancement.md](./005-agent-enhancement.md) - 3단계 기능 상세 설계
+- [006-polish-features.md](./006-polish-features.md) - 4단계 기능 상세 설계

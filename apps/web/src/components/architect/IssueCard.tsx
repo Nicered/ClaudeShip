@@ -2,6 +2,8 @@
 
 import { cn } from "@/lib/utils";
 import type { ReviewIssue } from "@claudeship/shared";
+import { useChatStore } from "@/stores/useChatStore";
+import { Button } from "@/components/ui/button";
 import {
   ShieldAlert,
   Bug,
@@ -9,10 +11,12 @@ import {
   Gauge,
   Code2,
   FileCode,
+  Wand2,
 } from "lucide-react";
 
 interface IssueCardProps {
   issue: ReviewIssue;
+  projectId?: string;
 }
 
 const severityConfig: Record<
@@ -33,8 +37,21 @@ const categoryIcons: Record<string, React.ReactNode> = {
   quality: <Code2 className="h-3.5 w-3.5" />,
 };
 
-export function IssueCard({ issue }: IssueCardProps) {
+export function IssueCard({ issue, projectId }: IssueCardProps) {
   const severity = severityConfig[issue.severity] || severityConfig.low;
+  const { sendMessage, setMode } = useChatStore();
+
+  const handleFix = () => {
+    if (!projectId) return;
+
+    const location = issue.file
+      ? `\nFile: ${issue.file}${issue.line ? `:${issue.line}` : ""}`
+      : "";
+    const prompt = `Fix this ${issue.category} issue:\n[${issue.severity.toUpperCase()}] ${issue.title}\n${issue.description}${location}${issue.suggestion ? `\n\nSuggestion: ${issue.suggestion}` : ""}`;
+
+    setMode("build");
+    sendMessage(projectId, prompt);
+  };
 
   return (
     <div className="border rounded-lg p-3 space-y-2 bg-background">
@@ -76,6 +93,19 @@ export function IssueCard({ issue }: IssueCardProps) {
         <div className="bg-muted/50 rounded p-2 text-xs">
           <span className="font-medium">Suggestion: </span>
           {issue.suggestion}
+        </div>
+      )}
+
+      {issue.autoFixable && projectId && (
+        <div className="pt-1">
+          <Button
+            size="sm"
+            onClick={handleFix}
+            className="h-6 text-xs bg-violet-600 hover:bg-violet-700 text-white"
+          >
+            <Wand2 className="h-3 w-3 mr-1" />
+            Fix
+          </Button>
         </div>
       )}
     </div>

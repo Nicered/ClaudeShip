@@ -37,6 +37,9 @@ export interface ClaudeStreamEvent {
 // Ask mode: read-only tools only
 const ASK_MODE_TOOLS = ["Read", "Glob", "Grep", "LSP", "WebFetch", "WebSearch"];
 
+// Plan mode: read-only tools + planning tools (Task, TodoWrite for plan output)
+const PLAN_MODE_TOOLS = ["Read", "Glob", "Grep", "LSP", "WebFetch", "WebSearch", "Task", "TodoWrite"];
+
 // All tools to allow when running as root (--dangerously-skip-permissions is rejected by root)
 const ROOT_ALLOWED_TOOLS = ["Bash", "Write", "Edit", "NotebookEdit", "Read", "Glob", "Grep", "WebFetch", "WebSearch", "TodoWrite", "Task"];
 
@@ -78,7 +81,8 @@ export class ClaudeCliService {
 
       // Build CLI command with optional resume flag and mode-specific tools
       const resumeFlag = resumeSessionId ? `--resume "${resumeSessionId}"` : "";
-      const toolsFlag = mode === "ask" ? `--tools "${ASK_MODE_TOOLS.join(",")}"` : "";
+      const modeTools = mode === "ask" ? ASK_MODE_TOOLS : mode === "plan" ? PLAN_MODE_TOOLS : null;
+      const toolsFlag = modeTools ? `--tools "${modeTools.join(",")}"` : "";
       // Root cannot use --dangerously-skip-permissions; use acceptEdits + allowedTools instead
       const isRoot = process.getuid?.() === 0;
       const permissionsFlag = isRoot
@@ -92,6 +96,8 @@ export class ClaudeCliService {
       }
       if (mode === "ask") {
         this.logger.log(`Ask mode: restricting tools to ${ASK_MODE_TOOLS.join(", ")}`);
+      } else if (mode === "plan") {
+        this.logger.log(`Plan mode: restricting tools to ${PLAN_MODE_TOOLS.join(", ")}`);
       }
 
       this.logger.log(`Using temp file: ${tempFile}`);

@@ -43,7 +43,9 @@ export function MessageInput({ onSend, projectId, disabled, isStreaming, queueCo
 
   const getPlaceholder = () => {
     if (isStreaming) return t("chat.queuePlaceholder");
-    return mode === "ask" ? t("chat.askPlaceholder") : t("chat.placeholder");
+    if (mode === "ask") return t("chat.askPlaceholder");
+    if (mode === "plan") return t("chat.planPlaceholder");
+    return t("chat.placeholder");
   };
 
   const handleFilesSelected = (files: File[]) => {

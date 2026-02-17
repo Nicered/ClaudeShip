@@ -136,6 +136,35 @@ export class FileService {
     }
   }
 
+  async saveFileContent(
+    projectId: string,
+    filePath: string,
+    content: string,
+  ): Promise<{ success: boolean }> {
+    const projectPath = await this.projectService.getProjectPath(projectId);
+    const fullPath = path.join(projectPath, filePath);
+
+    // Security: Prevent directory traversal
+    const resolvedPath = path.resolve(fullPath);
+    const resolvedProjectPath = path.resolve(projectPath);
+    if (!resolvedPath.startsWith(resolvedProjectPath)) {
+      throw new BadRequestException("Invalid file path");
+    }
+
+    // Prevent editing binary files
+    const binaryExts = [".png", ".jpg", ".jpeg", ".gif", ".ico", ".woff", ".woff2", ".ttf", ".eot", ".pdf", ".zip"];
+    if (binaryExts.includes(path.extname(filePath).toLowerCase())) {
+      throw new BadRequestException("Cannot edit binary files");
+    }
+
+    try {
+      await fs.writeFile(fullPath, content, "utf-8");
+      return { success: true };
+    } catch {
+      throw new BadRequestException("Failed to save file");
+    }
+  }
+
   private getLanguageFromExtension(ext: string): string {
     const languageMap: Record<string, string> = {
       ts: "typescript",

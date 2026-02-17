@@ -50,7 +50,9 @@
     "toolCompleted": "Completed",
     "newConversation": "New Chat",
     "modeAsk": "Ask",
-    "modeBuild": "Build"
+    "modePlan": "Plan",
+    "modeBuild": "Build",
+    "planPlaceholder": "Ask to plan the implementation..."
   },
   "preview": {
     "title": "Preview",

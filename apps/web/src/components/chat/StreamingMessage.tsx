@@ -25,8 +25,32 @@ interface StreamingMessageProps {
   projectId: string;
 }
 
-const COLLAPSE_THRESHOLD = 5; // Number of tool blocks before collapsing
-const VISIBLE_WHEN_COLLAPSED = 2; // Number of items to show at start and end when collapsed
+const COLLAPSE_THRESHOLD = 5;
+const VISIBLE_WHEN_COLLAPSED = 2;
+
+// Tool category definitions with colors
+type ToolCategory = "file" | "search" | "system" | "web" | "agent";
+
+const toolCategoryMap: Record<string, ToolCategory> = {
+  Read: "file",
+  Edit: "file",
+  Write: "file",
+  Glob: "search",
+  Grep: "search",
+  Bash: "system",
+  WebFetch: "web",
+  WebSearch: "web",
+  Task: "agent",
+  TodoWrite: "agent",
+};
+
+const categoryConfig: Record<ToolCategory, { label: string; color: string; border: string; bg: string; text: string }> = {
+  file: { label: "File", color: "text-blue-600 dark:text-blue-400", border: "border-blue-200 dark:border-blue-800", bg: "bg-blue-50 dark:bg-blue-950", text: "text-blue-700 dark:text-blue-300" },
+  search: { label: "Search", color: "text-purple-600 dark:text-purple-400", border: "border-purple-200 dark:border-purple-800", bg: "bg-purple-50 dark:bg-purple-950", text: "text-purple-700 dark:text-purple-300" },
+  system: { label: "System", color: "text-orange-600 dark:text-orange-400", border: "border-orange-200 dark:border-orange-800", bg: "bg-orange-50 dark:bg-orange-950", text: "text-orange-700 dark:text-orange-300" },
+  web: { label: "Web", color: "text-emerald-600 dark:text-emerald-400", border: "border-emerald-200 dark:border-emerald-800", bg: "bg-emerald-50 dark:bg-emerald-950", text: "text-emerald-700 dark:text-emerald-300" },
+  agent: { label: "Agent", color: "text-violet-600 dark:text-violet-400", border: "border-violet-200 dark:border-violet-800", bg: "bg-violet-50 dark:bg-violet-950", text: "text-violet-700 dark:text-violet-300" },
+};
 
 const toolIcons: Record<string, React.ReactNode> = {
   Read: <FileText className="h-4 w-4" />,
@@ -91,6 +115,68 @@ function getToolDescription(block: StreamingBlock): string {
   return "";
 }
 
+const subagentTypeLabels: Record<string, string> = {
+  Explore: "Explore Agent",
+  Plan: "Plan Agent",
+  "general-purpose": "General Agent",
+  Bash: "Bash Agent",
+};
+
+function SubagentBlock({ block }: { block: StreamingBlock }) {
+  const [showResult, setShowResult] = useState(false);
+  const isRunning = block.status === "running";
+  const input = block.tool?.input || {};
+  const agentType = (input.subagent_type as string) || "Agent";
+  const description = (input.description as string) || "";
+  const label = subagentTypeLabels[agentType] || `${agentType} Agent`;
+
+  return (
+    <div className={`rounded-lg border p-3 space-y-1.5 ${
+      isRunning
+        ? "border-violet-200 dark:border-violet-800 bg-violet-50 dark:bg-violet-950"
+        : "border-border bg-muted"
+    }`}>
+      <div className="flex items-center gap-2">
+        {isRunning ? (
+          <Loader2 className="h-4 w-4 animate-spin text-violet-600 dark:text-violet-400" />
+        ) : (
+          <CheckCircle2 className="h-4 w-4 text-green-600" />
+        )}
+        <Bot className={`h-4 w-4 ${isRunning ? "text-violet-600 dark:text-violet-400" : "text-muted-foreground"}`} />
+        <span className={`font-medium text-sm ${isRunning ? "text-violet-700 dark:text-violet-300" : ""}`}>
+          {label}
+        </span>
+        {block.duration !== undefined && (
+          <span className="text-xs text-muted-foreground ml-auto tabular-nums">
+            ({formatDuration(block.duration)})
+          </span>
+        )}
+      </div>
+
+      {description && (
+        <p className={`text-xs pl-10 ${isRunning ? "text-violet-600 dark:text-violet-400" : "text-muted-foreground"}`}>
+          &quot;{description}&quot;
+        </p>
+      )}
+
+      {block.result && !isRunning && (
+        <button
+          onClick={() => setShowResult(!showResult)}
+          className="text-xs text-muted-foreground hover:text-foreground transition-colors pl-10 flex items-center gap-1"
+        >
+          {showResult ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+          {showResult ? "결과 숨기기" : "결과 보기"}
+        </button>
+      )}
+      {showResult && block.result && (
+        <div className="pl-10 text-xs text-muted-foreground bg-background rounded p-2 max-h-40 overflow-y-auto whitespace-pre-wrap font-mono">
+          {block.result.length > 500 ? block.result.substring(0, 500) + "..." : block.result}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function TextBlock({ content }: { content: string }) {
   return <MarkdownRenderer content={content} />;
 }
@@ -102,31 +188,37 @@ function formatDuration(ms: number): string {
   return `${(ms / 1000).toFixed(1)}s`;
 }
 
+function getToolCategory(toolName: string): ToolCategory {
+  return toolCategoryMap[toolName] || "system";
+}
+
 function ToolUseBlock({ block }: { block: StreamingBlock }) {
   const isRunning = block.status === "running";
   const toolName = block.tool?.name || "Unknown";
+  const category = getToolCategory(toolName);
+  const config = categoryConfig[category];
 
   return (
     <div
-      className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm ${
+      className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm border ${
         isRunning
-          ? "bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800"
-          : "bg-muted border border-border"
+          ? `${config.bg} ${config.border}`
+          : "bg-muted border-border"
       }`}
     >
       {isRunning ? (
-        <Loader2 className="h-4 w-4 animate-spin text-blue-600 dark:text-blue-400" />
+        <Loader2 className={`h-4 w-4 animate-spin ${config.color}`} />
       ) : (
         <CheckCircle2 className="h-4 w-4 text-green-600" />
       )}
-      <span className={isRunning ? "text-blue-700 dark:text-blue-300" : "text-muted-foreground"}>
+      <span className={isRunning ? config.text : "text-muted-foreground"}>
         {toolIcons[toolName] || <Terminal className="h-4 w-4" />}
       </span>
-      <span className={`font-medium ${isRunning ? "text-blue-800 dark:text-blue-200" : ""}`}>
+      <span className={`font-medium ${isRunning ? config.text : ""}`}>
         {getToolDisplayName(toolName)}
       </span>
       {getToolDescription(block) && (
-        <span className={`truncate flex-1 ${isRunning ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground"}`}>
+        <span className={`truncate flex-1 ${isRunning ? config.color : "text-muted-foreground"}`}>
           {getToolDescription(block)}
         </span>
       )}
@@ -139,8 +231,46 @@ function ToolUseBlock({ block }: { block: StreamingBlock }) {
   );
 }
 
+function ToolSummaryBadges({ blocks }: { blocks: StreamingBlock[] }) {
+  const categoryCounts: Partial<Record<ToolCategory, number>> = {};
+  for (const block of blocks) {
+    const cat = getToolCategory(block.tool?.name || "");
+    categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+  }
+
+  const totalDuration = blocks.reduce((sum, b) => sum + (b.duration || 0), 0);
+
+  return (
+    <div className="flex items-center gap-1.5 flex-wrap">
+      {(Object.entries(categoryCounts) as [ToolCategory, number][]).map(([cat, count]) => {
+        const config = categoryConfig[cat];
+        return (
+          <span
+            key={cat}
+            className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium ${config.bg} ${config.text}`}
+          >
+            {config.label} {count}
+          </span>
+        );
+      })}
+      {totalDuration > 0 && (
+        <span className="text-xs text-muted-foreground tabular-nums">
+          ({formatDuration(totalDuration)})
+        </span>
+      )}
+    </div>
+  );
+}
+
 interface ToolBlockGroupProps {
   blocks: StreamingBlock[];
+}
+
+function renderToolBlock(block: StreamingBlock) {
+  if (block.tool?.name === "Task") {
+    return <SubagentBlock key={block.id} block={block} />;
+  }
+  return <ToolUseBlock key={block.id} block={block} />;
 }
 
 function ToolBlockGroup({ blocks }: ToolBlockGroupProps) {
@@ -151,9 +281,8 @@ function ToolBlockGroup({ blocks }: ToolBlockGroupProps) {
   if (!shouldCollapse || isExpanded) {
     return (
       <div className="space-y-1">
-        {blocks.map((block) => (
-          <ToolUseBlock key={block.id} block={block} />
-        ))}
+        {shouldCollapse && <ToolSummaryBadges blocks={blocks} />}
+        {blocks.map(renderToolBlock)}
         {shouldCollapse && isExpanded && (
           <button
             onClick={() => setIsExpanded(false)}
@@ -167,15 +296,13 @@ function ToolBlockGroup({ blocks }: ToolBlockGroupProps) {
     );
   }
 
-  // Show first few, collapse button, then last few
   const firstBlocks = blocks.slice(0, VISIBLE_WHEN_COLLAPSED);
   const lastBlocks = blocks.slice(-VISIBLE_WHEN_COLLAPSED);
 
   return (
     <div className="space-y-1">
-      {firstBlocks.map((block) => (
-        <ToolUseBlock key={block.id} block={block} />
-      ))}
+      <ToolSummaryBadges blocks={blocks} />
+      {firstBlocks.map(renderToolBlock)}
       <button
         onClick={() => setIsExpanded(true)}
         className="flex items-center gap-1 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors w-full justify-center border border-dashed border-border rounded-md hover:bg-muted/50"
@@ -183,9 +310,7 @@ function ToolBlockGroup({ blocks }: ToolBlockGroupProps) {
         <ChevronDown className="h-4 w-4" />
         <span>{hiddenCount}개 더 보기</span>
       </button>
-      {lastBlocks.map((block) => (
-        <ToolUseBlock key={block.id} block={block} />
-      ))}
+      {lastBlocks.map(renderToolBlock)}
     </div>
   );
 }
@@ -204,17 +329,14 @@ function groupBlocks(blocks: StreamingBlock[]): BlockGroup[] {
     if (block.type === "tool_use") {
       currentToolGroup.push(block);
     } else {
-      // Flush current tool group if exists
       if (currentToolGroup.length > 0) {
         groups.push({ type: "tool_group", blocks: currentToolGroup });
         currentToolGroup = [];
       }
-      // Add non-tool block as single item
       groups.push({ type: "other", blocks: [block] });
     }
   }
 
-  // Flush remaining tool group
   if (currentToolGroup.length > 0) {
     groups.push({ type: "tool_group", blocks: currentToolGroup });
   }
@@ -237,13 +359,11 @@ export function StreamingMessage({ blocks, isStreaming = true, projectId }: Stre
         AI
       </div>
       <div className="flex-1 space-y-2 overflow-hidden">
-        {/* Render block groups */}
         {blockGroups.map((group, groupIndex) => {
           if (group.type === "tool_group") {
             return <ToolBlockGroup key={`group-${groupIndex}`} blocks={group.blocks} />;
           }
 
-          // Render other blocks individually
           return group.blocks.map((block) => {
             if (block.type === "text") {
               return <TextBlock key={block.id} content={block.content || ""} />;
@@ -262,7 +382,6 @@ export function StreamingMessage({ blocks, isStreaming = true, projectId }: Stre
           });
         })}
 
-        {/* Show thinking state when streaming but no blocks yet */}
         {isStreaming && !hasBlocks && (
           <div className="flex items-center gap-2 text-muted-foreground">
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -270,7 +389,6 @@ export function StreamingMessage({ blocks, isStreaming = true, projectId }: Stre
           </div>
         )}
 
-        {/* Show cursor only while streaming */}
         {isStreaming && hasBlocks && (
           <span className="inline-block w-2 h-4 bg-primary animate-pulse" />
         )}

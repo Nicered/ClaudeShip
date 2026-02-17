@@ -55,6 +55,7 @@ export interface CreateProjectInput {
   frontendFramework?: FrontendFramework;
   backendFramework?: BackendFramework;
   description?: string;
+  features?: string[];
 }
 
 export interface ProjectListItem {

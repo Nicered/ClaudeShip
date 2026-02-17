@@ -244,41 +244,75 @@ export function CheckpointPanel({ projectId }: CheckpointPanelProps) {
               </div>
             </div>
 
-            {/* Checkpoints */}
-            {checkpoints.map((checkpoint, i) => (
-              <button
-                key={checkpoint.hash}
-                onClick={() => handleSelectCheckpoint(checkpoint)}
-                className={`w-full flex items-start gap-3 p-3 rounded-lg text-left transition-colors ${
-                  selectedCheckpoint?.hash === checkpoint.hash
-                    ? "bg-muted"
-                    : "hover:bg-muted/50"
-                }`}
-              >
-                <div className="relative">
-                  <div className="w-3 h-3 rounded-full bg-muted-foreground/30 mt-1" />
-                  {i < checkpoints.length - 1 && (
-                    <div className="absolute top-4 left-1.5 w-px h-full bg-muted-foreground/20" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm truncate">{checkpoint.message}</p>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                    <Clock className="h-3 w-3" />
-                    {formatTime(checkpoint.timestamp)}
+            {/* Checkpoints timeline */}
+            {checkpoints.map((checkpoint, i) => {
+              const totalChanges = checkpoint.insertions + checkpoint.deletions;
+              const maxBarWidth = 100;
+              const insertBar = totalChanges > 0
+                ? Math.max(1, Math.round((checkpoint.insertions / Math.max(totalChanges, 1)) * maxBarWidth))
+                : 0;
+              const deleteBar = totalChanges > 0
+                ? Math.max(1, maxBarWidth - insertBar)
+                : 0;
+              const isManual = !checkpoint.message.startsWith("Auto checkpoint");
+              const isSelected = selectedCheckpoint?.hash === checkpoint.hash;
+
+              return (
+                <button
+                  key={checkpoint.hash}
+                  onClick={() => handleSelectCheckpoint(checkpoint)}
+                  className={`w-full flex items-start gap-3 p-3 rounded-lg text-left transition-colors ${
+                    isSelected ? "bg-muted" : "hover:bg-muted/50"
+                  }`}
+                >
+                  <div className="relative flex flex-col items-center">
+                    <div
+                      className={`w-3 h-3 rounded-full mt-1 border-2 ${
+                        isManual
+                          ? "bg-primary border-primary"
+                          : isSelected
+                            ? "bg-muted-foreground border-muted-foreground"
+                            : "bg-background border-muted-foreground/40"
+                      }`}
+                    />
+                    {i < checkpoints.length - 1 && (
+                      <div className="w-px flex-1 min-h-[2rem] bg-muted-foreground/20 mt-1" />
+                    )}
                   </div>
-                  {checkpoint.filesChanged > 0 && (
-                    <div className="flex items-center gap-2 text-xs mt-1">
-                      <span className="text-green-500">+{checkpoint.insertions}</span>
-                      <span className="text-red-500">-{checkpoint.deletions}</span>
-                      <span className="text-muted-foreground">
-                        {checkpoint.filesChanged} files
-                      </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm truncate">{checkpoint.message}</p>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                      <Clock className="h-3 w-3" />
+                      {formatTime(checkpoint.timestamp)}
                     </div>
-                  )}
-                </div>
-              </button>
-            ))}
+                    {checkpoint.filesChanged > 0 && (
+                      <>
+                        <div className="flex items-center gap-2 text-xs mt-1">
+                          <FileText className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-muted-foreground">
+                            {checkpoint.filesChanged} file{checkpoint.filesChanged !== 1 ? "s" : ""}
+                          </span>
+                          <span className="text-green-500">+{checkpoint.insertions}</span>
+                          <span className="text-red-500">-{checkpoint.deletions}</span>
+                        </div>
+                        {totalChanges > 0 && (
+                          <div className="flex h-1.5 rounded-full overflow-hidden mt-1.5 bg-muted" style={{ width: `${Math.min(100, Math.max(20, totalChanges / 2))}%` }}>
+                            <div
+                              className="bg-green-500 h-full"
+                              style={{ width: `${insertBar}%` }}
+                            />
+                            <div
+                              className="bg-red-500 h-full"
+                              style={{ width: `${deleteBar}%` }}
+                            />
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </button>
+              );
+            })}
 
             {checkpoints.length === 0 && (
               <p className="text-sm text-muted-foreground px-3 py-2">
